@@ -38,3 +38,4 @@ describe('Legacy URL 301 Redirect Rules', () => {
     expect(blanketHomeRedirect).toBeUndefined();
   });
 });
+

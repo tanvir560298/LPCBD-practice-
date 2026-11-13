@@ -11,3 +11,4 @@ export interface EnquiryRecord {
 
 // In-memory store for synthetic demonstration
 export const receivedEnquiries: EnquiryRecord[] = [];
+

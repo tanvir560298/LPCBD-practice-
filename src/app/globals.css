@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-inter: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Bengali', 'SolaimanLipi', sans-serif;
 }
 
 body {
@@ -14,13 +14,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Accessibility focus styles */
+/* Accessibility focus styles conforming to WCAG 2.2 AA (>= 3:1 contrast against surface) */
 :focus-visible {
-  outline: 2px solid #f59e0b;
+  outline: 2px solid #d97706;
   outline-offset: 2px;
 }
 
-/* Custom scrollbars for tables */
+/* Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbars for data tables and rosters */
 .custom-scrollbar::-webkit-scrollbar {
   height: 6px;
   width: 6px;
@@ -35,4 +47,3 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
-

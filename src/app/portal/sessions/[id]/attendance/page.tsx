@@ -20,6 +20,8 @@ import {
   RotateCcw,
   MessageSquare,
   Sparkles,
+  Loader2,
+  AlertTriangle,
 } from 'lucide-react';
 import {
   AttendanceStatus,
@@ -81,9 +83,12 @@ export default function AttendanceWorkstationPage() {
   });
 
   const [isDirty, setIsDirty] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSavedTime, setLastSavedTime] = useState<string | null>(
     preExistingSheet?.lastSavedAt ? new Date(preExistingSheet.lastSavedAt).toLocaleTimeString() : null
   );
+  const [conflictError, setConflictError] = useState<string | null>(null);
 
   // Filter & Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -143,6 +148,7 @@ export default function AttendanceWorkstationPage() {
       },
     }));
     setIsDirty(true);
+    setConflictError(null);
   };
 
   const handleSetNote = (studentId: string, note: string) => {
@@ -179,18 +185,35 @@ export default function AttendanceWorkstationPage() {
   };
 
   // Save draft
-  const handleSaveDraft = () => {
-    setLastSavedTime(new Date().toLocaleTimeString() + ' BST');
-    setIsDirty(false);
+  const handleSaveDraft = async () => {
+    setIsSaving(true);
+    setConflictError(null);
+    try {
+      await new Promise((r) => setTimeout(r, 600));
+      setLastSavedTime(new Date().toLocaleTimeString() + ' BST');
+      setIsDirty(false);
+    } catch {
+      setConflictError('Network error while saving draft. In-memory edits remain preserved.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Submit Final
-  const handleConfirmSubmit = () => {
-    setSheetStatus('submitted');
-    setIsDirty(false);
-    setVersion((v) => v + 1);
-    setShowReviewSubmitModal(false);
-    setLastSavedTime(new Date().toLocaleTimeString() + ' BST');
+  const handleConfirmSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await new Promise((r) => setTimeout(r, 700));
+      setSheetStatus('submitted');
+      setIsDirty(false);
+      setVersion((v) => v + 1);
+      setShowReviewSubmitModal(false);
+      setLastSavedTime(new Date().toLocaleTimeString() + ' BST');
+    } catch {
+      setConflictError('Submission conflict. Please review roster and retry.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Submit Correction Request
@@ -233,7 +256,12 @@ export default function AttendanceWorkstationPage() {
 
         {/* Saved Status Indicator */}
         <div className="flex items-center gap-2">
-          {isDirty ? (
+          {isSaving ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-lpc-navy-800 bg-lpc-navy-50 px-3 py-1 rounded-full border border-lpc-navy-200">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span>Saving draft to server...</span>
+            </span>
+          ) : isDirty ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
               <span>Unsaved Changes</span>
@@ -246,6 +274,23 @@ export default function AttendanceWorkstationPage() {
           ) : null}
         </div>
       </div>
+
+      {/* Conflict Error Notice if any */}
+      {conflictError && (
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between gap-3 text-xs text-rose-800">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+            <span>{conflictError}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setConflictError(null)}
+            className="text-xs font-bold underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Session Details Header Card */}
       <div className="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-xs space-y-4">
@@ -366,7 +411,7 @@ export default function AttendanceWorkstationPage() {
               <button
                 type="button"
                 onClick={() => setShowMarkAllModal(true)}
-                className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5"
+                className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 min-h-[44px]"
               >
                 <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Mark All Present</span>
@@ -375,20 +420,21 @@ export default function AttendanceWorkstationPage() {
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs"
+                disabled={isSaving}
+                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs min-h-[44px] disabled:opacity-50"
               >
-                <Save className="w-3.5 h-3.5" />
-                <span>Save Draft</span>
+                {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setShowReviewSubmitModal(true)}
-                disabled={unmarkedCount > 0}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs"
+                disabled={unmarkedCount > 0 || isSubmitting}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs min-h-[44px]"
                 title={unmarkedCount > 0 ? 'All students must be marked before submitting' : 'Submit final attendance'}
               >
-                <Send className="w-3.5 h-3.5" />
+                {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                 <span>Submit Final Sheet</span>
               </button>
             </div>
@@ -411,7 +457,7 @@ export default function AttendanceWorkstationPage() {
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1 rounded-lg font-bold capitalize transition-all ${
+              className={`px-3 py-1 rounded-lg font-bold capitalize transition-all min-h-[36px] ${
                 statusFilter === st
                   ? 'bg-lpc-navy-900 text-white shadow-2xs'
                   : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
@@ -432,119 +478,138 @@ export default function AttendanceWorkstationPage() {
           </div>
         </div>
 
-        <div className="divide-y divide-slate-100">
-          {filteredStudents.map((student) => {
-            const currentRecord = records[student.id];
-            const currentStatus = currentRecord?.status || 'unmarked';
+        {filteredStudents.length === 0 ? (
+          <div className="p-10 text-center space-y-2">
+            <p className="text-sm font-semibold text-slate-700">No students match your search or filter</p>
+            <p className="text-xs text-slate-400">Try clearing the search query or status filter to view all enrolled students.</p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setStatusFilter('all');
+              }}
+              className="mt-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg"
+            >
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {filteredStudents.map((student) => {
+              const currentRecord = records[student.id];
+              const currentStatus = currentRecord?.status || 'unmarked';
 
-            return (
-              <div
-                key={student.id}
-                className={`p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors ${
-                  currentStatus === 'unmarked' ? 'bg-amber-50/20' : 'hover:bg-slate-50/60'
-                }`}
-              >
-                {/* Student Info */}
-                <div className="flex items-center gap-3 min-w-[240px]">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
-                    currentStatus === 'present' ? 'bg-emerald-100 text-emerald-800' :
-                    currentStatus === 'absent' ? 'bg-rose-100 text-rose-800' :
-                    currentStatus === 'late' ? 'bg-amber-100 text-amber-800' :
-                    currentStatus === 'excused' ? 'bg-sky-100 text-sky-800' :
-                    'bg-slate-200 text-slate-700'
-                  }`}>
-                    {student.fullName.slice(0, 2).toUpperCase()}
+              return (
+                <div
+                  key={student.id}
+                  className={`p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors ${
+                    currentStatus === 'unmarked' ? 'bg-amber-50/20' : 'hover:bg-slate-50/60'
+                  }`}
+                >
+                  {/* Student Info */}
+                  <div className="flex items-center gap-3 min-w-[240px]">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+                      currentStatus === 'present' ? 'bg-emerald-100 text-emerald-800' :
+                      currentStatus === 'absent' ? 'bg-rose-100 text-rose-800' :
+                      currentStatus === 'late' ? 'bg-amber-100 text-amber-800' :
+                      currentStatus === 'excused' ? 'bg-sky-100 text-sky-800' :
+                      'bg-slate-200 text-slate-700'
+                    }`}>
+                      {student.fullName.slice(0, 2).toUpperCase()}
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-bold text-slate-900">
+                        {student.fullName}
+                      </div>
+                      <div className="text-xs font-mono text-slate-500">
+                        {student.studentCode}
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <div className="text-sm font-bold text-slate-900">
-                      {student.fullName}
-                    </div>
-                    <div className="text-xs font-mono text-slate-500">
-                      {student.studentCode}
-                    </div>
+                  {/* Status Marking Control Buttons (Mobile friendly >= 44px) */}
+                  <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={`Attendance status for ${student.fullName}`}>
+                    {(['present', 'absent', 'late', 'excused'] as AttendanceStatus[]).map((statusOption) => {
+                      const isSelected = currentStatus === statusOption;
+
+                      return (
+                        <button
+                          key={statusOption}
+                          type="button"
+                          disabled={isSubmitted}
+                          onClick={() => handleSetStatus(student.id, statusOption)}
+                          aria-pressed={isSelected}
+                          className={`min-h-[44px] px-3.5 py-2 rounded-xl text-xs font-bold capitalize transition-all border flex items-center gap-1.5 ${
+                            isSelected
+                              ? statusOption === 'present'
+                                ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                                : statusOption === 'absent'
+                                ? 'bg-rose-600 text-white border-rose-600 shadow-xs'
+                                : statusOption === 'late'
+                                ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-xs'
+                                : 'bg-sky-600 text-white border-sky-600 shadow-xs'
+                              : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                          } disabled:opacity-60 disabled:cursor-not-allowed`}
+                        >
+                          {statusOption === 'present' && <CheckCircle className="w-3.5 h-3.5" />}
+                          {statusOption === 'absent' && <UserX className="w-3.5 h-3.5" />}
+                          {statusOption === 'late' && <Clock className="w-3.5 h-3.5" />}
+                          {statusOption === 'excused' && <ShieldAlert className="w-3.5 h-3.5" />}
+                          <span>{statusOption}</span>
+                        </button>
+                      );
+                    })}
+
+                    {!isSubmitted && currentStatus !== 'unmarked' && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetStatus(student.id, 'unmarked')}
+                        className="min-h-[44px] px-2.5 py-1 text-slate-400 hover:text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-100"
+                        title="Reset to unmarked"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Optional Note / Correction Button */}
+                  <div className="flex items-center gap-2">
+                    {!isSubmitted ? (
+                      <input
+                        type="text"
+                        value={currentRecord?.note || ''}
+                        onChange={(e) => handleSetNote(student.id, e.target.value)}
+                        placeholder="Add note (optional)..."
+                        aria-label={`Note for ${student.fullName}`}
+                        className="w-full sm:w-44 px-3 py-2 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-lpc-gold-500 min-h-[44px]"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        {currentRecord?.note && (
+                          <span className="text-xs text-slate-500 italic max-w-xs truncate">
+                            Note: {currentRecord.note}
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCorrectionStudentId(student.id);
+                            setShowCorrectionModal(true);
+                          }}
+                          className="px-3 py-2 text-xs font-semibold text-lpc-navy-800 hover:bg-lpc-navy-50 border border-lpc-navy-200 rounded-lg transition-colors flex items-center gap-1 min-h-[44px]"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>Request Correction</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                {/* Status Marking Control Buttons (Mobile friendly >= 44px) */}
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {(['present', 'absent', 'late', 'excused'] as AttendanceStatus[]).map((statusOption) => {
-                    const isSelected = currentStatus === statusOption;
-
-                    return (
-                      <button
-                        key={statusOption}
-                        type="button"
-                        disabled={isSubmitted}
-                        onClick={() => handleSetStatus(student.id, statusOption)}
-                        className={`min-h-[40px] px-3.5 py-1.5 rounded-xl text-xs font-bold capitalize transition-all border flex items-center gap-1.5 ${
-                          isSelected
-                            ? statusOption === 'present'
-                              ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                              : statusOption === 'absent'
-                              ? 'bg-rose-600 text-white border-rose-600 shadow-xs'
-                              : statusOption === 'late'
-                              ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-xs'
-                              : 'bg-sky-600 text-white border-sky-600 shadow-xs'
-                            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
-                        } disabled:opacity-60 disabled:cursor-not-allowed`}
-                      >
-                        {statusOption === 'present' && <CheckCircle className="w-3.5 h-3.5" />}
-                        {statusOption === 'absent' && <UserX className="w-3.5 h-3.5" />}
-                        {statusOption === 'late' && <Clock className="w-3.5 h-3.5" />}
-                        {statusOption === 'excused' && <ShieldAlert className="w-3.5 h-3.5" />}
-                        <span>{statusOption}</span>
-                      </button>
-                    );
-                  })}
-
-                  {!isSubmitted && currentStatus !== 'unmarked' && (
-                    <button
-                      type="button"
-                      onClick={() => handleSetStatus(student.id, 'unmarked')}
-                      className="min-h-[40px] px-2.5 py-1 text-slate-400 hover:text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-100"
-                      title="Reset to unmarked"
-                    >
-                      Reset
-                    </button>
-                  )}
-                </div>
-
-                {/* Optional Note / Correction Button */}
-                <div className="flex items-center gap-2">
-                  {!isSubmitted ? (
-                    <input
-                      type="text"
-                      value={currentRecord?.note || ''}
-                      onChange={(e) => handleSetNote(student.id, e.target.value)}
-                      placeholder="Add note (optional)..."
-                      className="w-full sm:w-44 px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-lpc-gold-500"
-                    />
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      {currentRecord?.note && (
-                        <span className="text-xs text-slate-500 italic max-w-xs truncate">
-                          Note: {currentRecord.note}
-                        </span>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCorrectionStudentId(student.id);
-                          setShowCorrectionModal(true);
-                        }}
-                        className="px-2.5 py-1 text-xs font-semibold text-lpc-navy-800 hover:bg-lpc-navy-50 border border-lpc-navy-200 rounded-lg transition-colors flex items-center gap-1"
-                      >
-                        <MessageSquare className="w-3 h-3" />
-                        <span>Request Correction</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Confirmation Modal for Mark All Present */}
@@ -645,9 +710,11 @@ export default function AttendanceWorkstationPage() {
               <button
                 type="button"
                 onClick={handleConfirmSubmit}
-                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-sm"
+                disabled={isSubmitting}
+                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-sm flex items-center gap-1.5"
               >
-                Confirm & Lock Attendance
+                {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                <span>Confirm & Lock Attendance</span>
               </button>
             </div>
           </div>
@@ -707,4 +774,3 @@ export default function AttendanceWorkstationPage() {
     </div>
   );
 }
-
