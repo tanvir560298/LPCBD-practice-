@@ -14,10 +14,12 @@ import {
   Loader2,
   Shield,
 } from 'lucide-react';
+import { usePortal } from '@/components/portal/PortalContext';
 import { SYNTHETIC_USERS } from '@/lib/mockData';
 
 export default function PortalLoginPage() {
   const router = useRouter();
+  const { setActor } = usePortal();
   const [selectedActorId, setSelectedActorId] = useState('t-01');
   const [password, setPassword] = useState('demo-password');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,6 +47,7 @@ export default function PortalLoginPage() {
     }
 
     setIsSubmitting(true);
+    setActor(selectedActorId);
 
     // Save demo user in cookie for server route verification
     if (typeof document !== 'undefined') {

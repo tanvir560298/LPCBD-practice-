@@ -1,91 +1,10 @@
 'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import {
-  Users,
-  Calendar,
-  Clock,
-  ArrowRight,
-  BookOpen,
-  MapPin,
-} from 'lucide-react';
-import {
-  SYNTHETIC_BATCHES,
-  SYNTHETIC_COURSES,
-  SYNTHETIC_BRANCHES,
-  SYNTHETIC_ENROLLMENTS,
-} from '@/lib/mockData';
-
-export default function PortalBatchesPage() {
-  return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-xs space-y-2">
-        <h1 className="text-2xl font-bold text-slate-900">Assigned Cohorts & Batches</h1>
-        <p className="text-xs sm:text-sm text-slate-500">
-          Batches currently assigned to your faculty profile. Teachers can only view and manage attendance for their authorized batches.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SYNTHETIC_BATCHES.map((batch) => {
-          const course = SYNTHETIC_COURSES.find((c) => c.id === batch.courseId);
-          const branch = SYNTHETIC_BRANCHES.find((b) => b.id === batch.branchId);
-          const enrolledCount = SYNTHETIC_ENROLLMENTS.filter(
-            (e) => e.batchId === batch.id && e.status === 'active'
-          ).length;
-
-          return (
-            <div
-              key={batch.id}
-              className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 flex flex-col justify-between space-y-4"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-lpc-navy-900 bg-lpc-navy-50 px-2 py-0.5 rounded">
-                    {batch.code}
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    Active Term
-                  </span>
-                </div>
-
-                <h2 className="text-base font-bold text-slate-900">
-                  {batch.name}
-                </h2>
-
-                <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="font-medium text-slate-800">{course?.title}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{batch.schedulePattern}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{enrolledCount} Active Enrolled Students</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <Link
-                  href={`/portal/batches/${batch.id}`}
-                  className="text-xs font-bold text-lpc-navy-800 hover:text-lpc-navy-950 flex items-center gap-1"
-                >
-                  <span>Cohort Details & Sessions &rarr;</span>
-                </Link>
-                <span className="text-[11px] text-slate-400">
-                  {branch?.city}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+import { Users, ArrowRight, Clock3, BookOpen } from 'lucide-react';
+import { usePortal } from '@/components/portal/PortalContext';
+import { visibleSessions } from '@/lib/portalView';
+import { SYNTHETIC_BATCHES as batches, SYNTHETIC_COURSES as courses, SYNTHETIC_CLASS_SESSIONS as sessions, SYNTHETIC_ENROLLMENTS as enrollments, SYNTHETIC_BRANCHES as branches } from '@/lib/mockData';
+export default function BatchesPage(){
+ const {actor}=usePortal();const allowed=visibleSessions(actor,sessions,batches),ids=new Set(allowed.map(s=>s.batchId));
+ return <div className="pt-page"><section className="pt-page-heading"><div><p className="pt-eyebrow">YOUR CLASSES & STUDENTS</p><h1>My batches</h1><p>Choose a batch to view its students and class sessions.</p></div></section><div className="pt-action-grid">{batches.filter(b=>ids.has(b.id)).map(b=>{const course=courses.find(c=>c.id===b.courseId);return <Link className="pt-action" href={`/portal/batches/${b.id}`} key={b.id}><span className="pt-tool-icon"><BookOpen size={23}/></span><h3>{b.name}</h3><p>{course?.category} · {branches.find(br=>br.id===b.branchId)?.city}<br/>{enrollments.filter(e=>e.batchId===b.id&&e.status==='active').length} students<br/>{b.schedulePattern}</p><span className="pt-action-footer">View batch <ArrowRight size={17}/></span></Link>;})}</div>{!ids.size&&<section className="pt-panel pt-empty"><Users size={28}/><h2>No batches assigned</h2><p>Your coordinator can assign your classes.</p></section>}</div>;
 }
-
