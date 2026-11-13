@@ -9,3 +9,5 @@
 .pt-attendance-page{gap:18px}.pt-attendance-page .pt-page-heading h1{font-size:26px;margin-bottom:5px}.pt-attendance-page .pt-marking-progress{padding:16px 22px}.pt-attendance-page .pt-attendance-counts{padding:8px 16px}.pt-attendance-page .pt-count{min-height:60px}.pt-attendance-page .pt-roster-toolbar{padding:16px 22px}
 
 @media(max-width:480px){.pt-overview>div{flex:1 1 100%;min-width:0}.pt-overview>div>span:last-child{white-space:normal;font-size:14px}.pt-profile{min-width:0;width:100%}.pt-profile select{min-width:0;max-width:100%;flex:1}.pt-attendance-counts{grid-template-columns:repeat(3,minmax(0,1fr))}.pt-review-counts{grid-template-columns:repeat(2,minmax(0,1fr))}.pt-page-heading,.pt-class-details{min-width:0;overflow-wrap:anywhere}}
+
+.pt-public-link{min-height:48px;padding:10px 16px;border:1px solid var(--pt-line);border-radius:8px;font-size:15px;font-weight:650;color:var(--pt-navy);background:#fff}.pt-public-link:hover{background:#edf2f8}
