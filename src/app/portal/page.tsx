@@ -70,11 +70,16 @@ export default function PortalDashboard() {
             onChange={(e) => setSelectedTeacherId(e.target.value)}
             className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg font-bold text-slate-800 focus:ring-2 focus:ring-lpc-gold-500"
           >
-            {SYNTHETIC_TEACHERS.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.fullName} ({t.id === 't-03' ? '0 Sessions Today' : t.id === 't-02' ? '1 Session Today' : '2 Sessions Today'})
-              </option>
-            ))}
+            {SYNTHETIC_TEACHERS.map((t) => {
+              const count = SYNTHETIC_CLASS_SESSIONS.filter(
+                (s) => s.sessionDate === todayDhaka && s.assignedTeacherId === t.id
+              ).length;
+              return (
+                <option key={t.id} value={t.id}>
+                  {t.fullName} ({count} {count === 1 ? 'Session' : 'Sessions'} Today)
+                </option>
+              );
+            })}
           </select>
           <div className="text-[11px] text-slate-400">
             {activeTeacher.department}
