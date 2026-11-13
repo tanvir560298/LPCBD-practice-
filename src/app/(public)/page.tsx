@@ -33,11 +33,11 @@ const COURSE_IMAGES: Record<string, string> = {
   'english-for-teens': '/assets/images/course-teens.svg',
 };
 
-const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  'Spoken English': { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200' },
-  'Test Preparation': { bg: 'bg-indigo-50', text: 'text-indigo-800', border: 'border-indigo-200' },
-  'Professional Skills': { bg: 'bg-cyan-50', text: 'text-cyan-800', border: 'border-cyan-200' },
-  'Young Learners': { bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200' },
+const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string; bar: string }> = {
+  'Spoken English': { bg: 'bg-lpc-navy-50', text: 'text-lpc-navy-900', border: 'border-lpc-navy-200', bar: 'bg-lpc-navy-600' },
+  'Test Preparation': { bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-300', bar: 'bg-lpc-gold-500' },
+  'Professional Skills': { bg: 'bg-rose-50', text: 'text-rose-900', border: 'border-rose-200', bar: 'bg-lpc-crimson-600' },
+  'Young Learners': { bg: 'bg-emerald-50', text: 'text-emerald-900', border: 'border-emerald-200', bar: 'bg-emerald-600' },
 };
 
 export default function HomePage() {
@@ -74,70 +74,83 @@ export default function HomePage() {
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-20">
-      {/* 1. HERO SECTION (Clear Separation from Navbar, Balanced Text & Classroom Photography) */}
-      <section className="relative bg-gradient-to-b from-slate-50/90 via-white to-slate-50/40 border-b border-slate-200/80 pt-12 sm:pt-16 lg:pt-20 pb-16 sm:pb-24 overflow-hidden">
+      {/* 1. HERO SECTION (LPC Academic Navy, Tri-Color Harmonies & Balanced Photography) */}
+      <section className="relative bg-gradient-to-b from-slate-950 via-lpc-navy-950 to-lpc-navy-900 text-white border-b border-lpc-navy-800 pt-12 sm:pt-16 lg:pt-20 pb-16 sm:pb-24 overflow-hidden">
+        {/* Ambient Subtle Tri-Color Glows */}
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-lpc-navy-600/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-80 h-80 bg-lpc-crimson-900/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-lpc-gold-500/10 rounded-full blur-3xl pointer-events-none" />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
             {/* Left Column: Academic Proposition & Action (55% width) */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              {/* Logo Crimson 'C' Accent Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lpc-crimson-950/90 border border-lpc-crimson-500/40 text-lpc-crimson-200 text-xs font-bold tracking-wide shadow-xs">
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lpc-crimson-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-lpc-crimson-500"></span>
+                </span>
                 <span>Admissions Open for Winter 2026 Term • All 4 Campuses</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
                 Speak Confidently. <br />
-                <span className="text-lpc-navy-900">Excel Globally.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-lpc-gold-400 via-amber-300 to-lpc-gold-500">
+                  Excel Globally.
+                </span>
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-700 max-w-xl leading-relaxed">
+              <p className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed">
                 Language Proficiency Center (LPC) provides research-backed communicative English pedagogy, IELTS intensive masterclasses, and executive communication training across Bangladesh.
               </p>
 
               {/* Prioritized Actions */}
               <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+                {/* Logo Gold 'L' Primary Button */}
                 <button
                   type="button"
                   onClick={() => setEnquiryModalOpen(true)}
-                  className="px-6 py-3.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm"
+                  className="px-6 py-3.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm border border-lpc-gold-300"
                 >
                   <span>Apply for Admission</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
+                {/* Secondary Button */}
                 <Link
                   href="/courses"
-                  className="px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-xl border border-slate-300 shadow-2xs transition-all flex items-center justify-center gap-2 text-sm"
+                  className="px-6 py-3.5 bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl border border-white/20 shadow-xs transition-all flex items-center justify-center gap-2 text-sm backdrop-blur-xs"
                 >
-                  <BookOpen className="w-4 h-4 text-lpc-navy-700" />
+                  <BookOpen className="w-4 h-4 text-lpc-gold-400" />
                   <span>Explore Course Catalog</span>
                 </Link>
               </div>
 
               {/* Trust Indicators */}
-              <div className="pt-6 border-t border-slate-200 grid grid-cols-3 gap-4 text-left">
+              <div className="pt-6 border-t border-white/15 grid grid-cols-3 gap-4 text-left">
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900">4 Campuses</div>
-                  <div className="text-xs text-slate-500 mt-0.5">Dhaka, CTG, Rajshahi, CXB</div>
+                  <div className="text-xl sm:text-2xl font-black text-lpc-gold-400">4 Campuses</div>
+                  <div className="text-xs text-slate-300 mt-0.5">Dhaka, CTG, Rajshahi, CXB</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900">CLT Pedagogy</div>
-                  <div className="text-xs text-slate-500 mt-0.5">Communicative Practice</div>
+                  <div className="text-xl sm:text-2xl font-black text-white">CLT Pedagogy</div>
+                  <div className="text-xs text-slate-300 mt-0.5">Communicative Practice</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900">Asia/Dhaka</div>
-                  <div className="text-xs text-slate-500 mt-0.5">Timetable &amp; Roster Sync</div>
+                  <div className="text-xl sm:text-2xl font-black text-lpc-gold-400">Asia/Dhaka</div>
+                  <div className="text-xs text-slate-300 mt-0.5">Timetable &amp; Roster Sync</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Balanced Classroom Photography & Floating Credential Cards (45% width) */}
+            {/* Right Column: Balanced Classroom Photography with Tri-Color Frame */}
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-lg lg:max-w-none">
-                {/* Visual Classroom Frame */}
-                <div className="rounded-2xl border border-slate-200/90 shadow-xl bg-white p-2.5 overflow-hidden">
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-100">
+                {/* Visual Classroom Frame with subtle border */}
+                <div className="rounded-2xl border-2 border-slate-700/80 shadow-2xl bg-slate-900/80 p-2.5 overflow-hidden backdrop-blur-xs">
+                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-800">
                     <img
                       src="/assets/images/hero-classroom.svg"
                       alt="LPC interactive communicative language seminar classroom"
@@ -147,24 +160,24 @@ export default function HomePage() {
                 </div>
 
                 {/* Floating Badge 1: Top Right */}
-                <div className="absolute -top-4 -right-4 bg-white/95 backdrop-blur-xs border border-slate-200 rounded-xl px-3.5 py-2 shadow-lg hidden sm:flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                <div className="absolute -top-4 -right-4 bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white rounded-xl px-3.5 py-2 shadow-xl hidden sm:flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-lpc-gold-500/20 text-lpc-gold-400 flex items-center justify-center font-bold text-xs">
                     <Award className="w-4 h-4" />
                   </div>
                   <div className="text-left">
-                    <div className="text-xs font-bold text-slate-900">CEFR Certified</div>
-                    <div className="text-[10px] text-slate-500">Curriculum Standards A1–C1</div>
+                    <div className="text-xs font-bold text-white">CEFR Certified</div>
+                    <div className="text-[10px] text-slate-400">Curriculum Standards A1–C1</div>
                   </div>
                 </div>
 
                 {/* Floating Badge 2: Bottom Left */}
-                <div className="absolute -bottom-4 -left-4 bg-white/95 backdrop-blur-xs border border-slate-200 rounded-xl px-3.5 py-2.5 shadow-lg hidden sm:flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">
+                <div className="absolute -bottom-4 -left-4 bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white rounded-xl px-3.5 py-2.5 shadow-xl hidden sm:flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-lpc-crimson-600/25 text-lpc-crimson-300 flex items-center justify-center font-bold text-xs">
                     <Users className="w-4 h-4" />
                   </div>
                   <div className="text-left">
-                    <div className="text-xs font-bold text-slate-900">Active Speaking Labs</div>
-                    <div className="text-[10px] text-slate-500">15–20 Students per Cohort</div>
+                    <div className="text-xs font-bold text-white">Active Speaking Labs</div>
+                    <div className="text-[10px] text-slate-400">15–20 Students per Cohort</div>
                   </div>
                 </div>
               </div>
@@ -247,8 +260,11 @@ export default function HomePage() {
             return (
               <div
                 key={course.id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all flex flex-col justify-between overflow-hidden group"
+                className="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between overflow-hidden group"
               >
+                {/* Tri-Color Top Accent Bar */}
+                <div className={`h-1.5 w-full ${catStyle.bar}`} />
+
                 <div>
                   {/* Thematic Thumbnail Visual */}
                   <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">

@@ -320,6 +320,9 @@ export const Navbar: React.FC = () => {
         </div>
       )}
 
+      {/* 3. Tri-Color Signature Accent Line (LPC Gold -> Navy -> Crimson) */}
+      <div className="h-[3px] w-full bg-gradient-to-r from-lpc-gold-500 via-lpc-navy-600 to-lpc-crimson-600" />
+
       {/* Shared Enquiry Modal */}
       <EnquiryModal
         isOpen={enquiryModalOpen}

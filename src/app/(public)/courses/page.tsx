@@ -23,11 +23,11 @@ const COURSE_IMAGES: Record<string, string> = {
   'english-for-teens': '/assets/images/course-teens.svg',
 };
 
-const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  'Spoken English': { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200' },
-  'Test Preparation': { bg: 'bg-indigo-50', text: 'text-indigo-800', border: 'border-indigo-200' },
-  'Professional Skills': { bg: 'bg-cyan-50', text: 'text-cyan-800', border: 'border-cyan-200' },
-  'Young Learners': { bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200' },
+const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string; bar: string }> = {
+  'Spoken English': { bg: 'bg-lpc-navy-50', text: 'text-lpc-navy-900', border: 'border-lpc-navy-200', bar: 'bg-lpc-navy-600' },
+  'Test Preparation': { bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-300', bar: 'bg-lpc-gold-500' },
+  'Professional Skills': { bg: 'bg-rose-50', text: 'text-rose-900', border: 'border-rose-200', bar: 'bg-lpc-crimson-600' },
+  'Young Learners': { bg: 'bg-emerald-50', text: 'text-emerald-900', border: 'border-emerald-200', bar: 'bg-emerald-600' },
 };
 
 export default function CoursesPage() {
@@ -176,8 +176,11 @@ export default function CoursesPage() {
             return (
               <div
                 key={course.id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col justify-between overflow-hidden group"
+                className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col justify-between overflow-hidden group"
               >
+                {/* Tri-Color Top Accent Bar */}
+                <div className={`h-1.5 w-full ${catStyle.bar}`} />
+
                 <div>
                   {/* Distinct Visual Thumbnail */}
                   <div className="relative aspect-[21/9] w-full overflow-hidden bg-slate-900">
