@@ -22,6 +22,7 @@ import {
   Sparkles,
   Loader2,
   AlertTriangle,
+  RefreshCw,
 } from 'lucide-react';
 import {
   AttendanceStatus,
@@ -35,7 +36,6 @@ import {
   SYNTHETIC_BRANCHES,
   SYNTHETIC_STUDENTS,
   SYNTHETIC_ENROLLMENTS,
-  INITIAL_ATTENDANCE_SHEETS,
 } from '@/lib/mockData';
 import { formatDhakaTimeOnly } from '@/lib/timeUtils';
 
@@ -49,48 +49,27 @@ export default function AttendanceWorkstationPage() {
   const course = SYNTHETIC_COURSES.find((c) => c.id === batch?.courseId);
   const branch = SYNTHETIC_BRANCHES.find((b) => b.id === batch?.branchId);
 
-  // Eligible students for this batch
-  const eligibleEnrollments = SYNTHETIC_ENROLLMENTS.filter(
+  // Eligible students
+  const enrollments = SYNTHETIC_ENROLLMENTS.filter(
     (e) => e.batchId === batch?.id && e.status === 'active'
   );
   const eligibleStudents = SYNTHETIC_STUDENTS.filter((s) =>
-    eligibleEnrollments.some((e) => e.studentId === s.id)
+    enrollments.some((e) => e.studentId === s.id)
   );
 
-  // Initial state from mock or fresh
-  const preExistingSheet = INITIAL_ATTENDANCE_SHEETS[sessionId];
-
-  const [sheetStatus, setSheetStatus] = useState<'draft' | 'submitted'>(
-    preExistingSheet?.status || 'draft'
-  );
-  const [version, setVersion] = useState<number>(preExistingSheet?.version || 1);
-  const [records, setRecords] = useState<Record<string, AttendanceRecord>>(() => {
-    if (preExistingSheet) {
-      return { ...preExistingSheet.records };
-    }
-    // New sheet: all students default to UNMARKED
-    const initial: Record<string, AttendanceRecord> = {};
-    eligibleStudents.forEach((student) => {
-      initial[student.id] = {
-        id: `rec-${sessionId}-${student.id}`,
-        sessionId,
-        studentId: student.id,
-        status: 'unmarked',
-        updatedAt: new Date().toISOString(),
-      };
-    });
-    return initial;
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [sheetStatus, setSheetStatus] = useState<'draft' | 'submitted'>('draft');
+  const [version, setVersion] = useState<number>(1);
+  const [records, setRecords] = useState<Record<string, AttendanceRecord>>({});
 
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [lastSavedTime, setLastSavedTime] = useState<string | null>(
-    preExistingSheet?.lastSavedAt ? new Date(preExistingSheet.lastSavedAt).toLocaleTimeString() : null
-  );
-  const [conflictError, setConflictError] = useState<string | null>(null);
+  const [lastSavedTime, setLastSavedTime] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [concurrencyConflict, setConcurrencyConflict] = useState<boolean>(false);
 
-  // Filter & Search
+  // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | AttendanceStatus>('all');
 
@@ -99,8 +78,41 @@ export default function AttendanceWorkstationPage() {
   const [showReviewSubmitModal, setShowReviewSubmitModal] = useState(false);
   const [showCorrectionModal, setShowCorrectionModal] = useState(false);
   const [correctionStudentId, setCorrectionStudentId] = useState<string | null>(null);
+  const [correctionRequestedStatus, setCorrectionRequestedStatus] = useState<AttendanceStatus>('late');
   const [correctionReason, setCorrectionReason] = useState('');
   const [correctionSuccessMessage, setCorrectionSuccessMessage] = useState<string | null>(null);
+
+  // Fetch initial sheet from server endpoint
+  const loadSheetData = async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    setConcurrencyConflict(false);
+    try {
+      const res = await fetch(`/api/portal/sessions/${sessionId}/attendance`);
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMessage(data.error || 'Failed to load session attendance.');
+        setIsLoading(false);
+        return;
+      }
+
+      setSheetStatus(data.sheet.status);
+      setVersion(data.sheet.version);
+      setRecords(data.sheet.records || {});
+      if (data.sheet.lastSavedAt) {
+        setLastSavedTime(new Date(data.sheet.lastSavedAt).toLocaleTimeString() + ' BST');
+      }
+      setIsDirty(false);
+    } catch {
+      setErrorMessage('Network error fetching attendance data from LPC server.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadSheetData();
+  }, [sessionId]);
 
   // Warn before browser unload if dirty
   useEffect(() => {
@@ -122,6 +134,26 @@ export default function AttendanceWorkstationPage() {
         <Link href="/portal" className="px-4 py-2 bg-lpc-navy-800 text-white rounded-lg text-xs font-semibold">
           Return to Dashboard
         </Link>
+      </div>
+    );
+  }
+
+  // Cancelled session guard per Attendance Spec
+  if (session.status === 'cancelled') {
+    return (
+      <div className="max-w-2xl mx-auto py-16 text-center space-y-4 bg-white p-8 rounded-2xl border border-slate-200">
+        <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center mx-auto">
+          <AlertTriangle className="w-6 h-6" />
+        </div>
+        <h1 className="text-xl font-bold text-slate-900">Class Session Cancelled</h1>
+        <p className="text-xs sm:text-sm text-slate-600">
+          This session was marked as cancelled. Per LPC Attendance Integrity Rules, attendance cannot be submitted or recorded for cancelled classes.
+        </p>
+        <div className="pt-2">
+          <Link href="/portal" className="px-4 py-2 bg-lpc-navy-800 text-white text-xs font-bold rounded-lg">
+            &larr; Return to Dashboard
+          </Link>
+        </div>
       </div>
     );
   }
@@ -148,7 +180,7 @@ export default function AttendanceWorkstationPage() {
       },
     }));
     setIsDirty(true);
-    setConflictError(null);
+    setErrorMessage(null);
   };
 
   const handleSetNote = (studentId: string, note: string) => {
@@ -184,49 +216,116 @@ export default function AttendanceWorkstationPage() {
     setShowMarkAllModal(false);
   };
 
-  // Save draft
+  // Save draft via real API
   const handleSaveDraft = async () => {
     setIsSaving(true);
-    setConflictError(null);
+    setErrorMessage(null);
+    setConcurrencyConflict(false);
     try {
-      await new Promise((r) => setTimeout(r, 600));
-      setLastSavedTime(new Date().toLocaleTimeString() + ' BST');
+      const res = await fetch(`/api/portal/sessions/${sessionId}/attendance`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          records,
+          version,
+          actorId: session.assignedTeacherId,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 409) {
+          setConcurrencyConflict(true);
+        }
+        setErrorMessage(data.error || 'Failed to save draft.');
+        setIsSaving(false);
+        return;
+      }
+
+      setVersion(data.sheet.version);
+      setLastSavedTime(new Date(data.sheet.lastSavedAt).toLocaleTimeString() + ' BST');
       setIsDirty(false);
     } catch {
-      setConflictError('Network error while saving draft. In-memory edits remain preserved.');
+      setErrorMessage('Network error while saving draft. In-memory edits remain preserved.');
     } finally {
       setIsSaving(false);
     }
   };
 
-  // Submit Final
+  // Submit Final via real API
   const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
+    setErrorMessage(null);
     try {
-      await new Promise((r) => setTimeout(r, 700));
+      const res = await fetch(`/api/portal/sessions/${sessionId}/attendance`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          records,
+          version,
+          actorId: session.assignedTeacherId,
+          teacherName: 'Dr. Anisur Rahman',
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 409) {
+          setConcurrencyConflict(true);
+        }
+        setErrorMessage(data.error || 'Failed to submit attendance.');
+        setShowReviewSubmitModal(false);
+        setIsSubmitting(false);
+        return;
+      }
+
       setSheetStatus('submitted');
+      setVersion(data.sheet.version);
+      setLastSavedTime(new Date(data.sheet.lastSavedAt).toLocaleTimeString() + ' BST');
       setIsDirty(false);
-      setVersion((v) => v + 1);
       setShowReviewSubmitModal(false);
-      setLastSavedTime(new Date().toLocaleTimeString() + ' BST');
     } catch {
-      setConflictError('Submission conflict. Please review roster and retry.');
+      setErrorMessage('Network error during final submission. In-memory edits preserved.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Submit Correction Request
-  const handleSendCorrectionRequest = (e: React.FormEvent) => {
+  // Submit Correction Request via real API
+  const handleSendCorrectionRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!correctionReason.trim()) return;
-    setCorrectionSuccessMessage('Correction request submitted to Branch Academic Coordinator for audit review.');
-    setTimeout(() => {
-      setShowCorrectionModal(false);
-      setCorrectionSuccessMessage(null);
-      setCorrectionReason('');
-      setCorrectionStudentId(null);
-    }, 1800);
+    if (!correctionReason.trim() || !correctionStudentId) return;
+
+    try {
+      const currentStatus = records[correctionStudentId]?.status || 'unmarked';
+      const res = await fetch(`/api/portal/sessions/${sessionId}/attendance`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId: correctionStudentId,
+          previousStatus: currentStatus,
+          requestedStatus: correctionRequestedStatus,
+          reason: correctionReason,
+          teacherId: session.assignedTeacherId,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMessage(data.error || 'Failed to file correction request.');
+        return;
+      }
+
+      setCorrectionSuccessMessage(data.message || 'Correction request logged for coordinator review.');
+      setTimeout(() => {
+        setShowCorrectionModal(false);
+        setCorrectionSuccessMessage(null);
+        setCorrectionReason('');
+        setCorrectionStudentId(null);
+      }, 1500);
+    } catch {
+      setErrorMessage('Network error filing correction.');
+    }
   };
 
   // Filtered student list
@@ -275,20 +374,23 @@ export default function AttendanceWorkstationPage() {
         </div>
       </div>
 
-      {/* Conflict Error Notice if any */}
-      {conflictError && (
+      {/* Concurrency Conflict or Error Banner */}
+      {errorMessage && (
         <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between gap-3 text-xs text-rose-800">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>{conflictError}</span>
+            <span>{errorMessage}</span>
           </div>
-          <button
-            type="button"
-            onClick={() => setConflictError(null)}
-            className="text-xs font-bold underline"
-          >
-            Dismiss
-          </button>
+          {concurrencyConflict && (
+            <button
+              type="button"
+              onClick={loadSheetData}
+              className="px-3 py-1 bg-rose-800 text-white font-bold rounded-lg flex items-center gap-1 hover:bg-rose-900"
+            >
+              <RefreshCw className="w-3 h-3" />
+              <span>Reload Latest Server Draft</span>
+            </button>
+          )}
         </div>
       )}
 
@@ -443,7 +545,7 @@ export default function AttendanceWorkstationPage() {
           {isSubmitted && (
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 italic">
-                Sheet locked against direct edits.
+                Sheet locked against direct edits. Retrospective adjustments require coordinator approval.
               </span>
             </div>
           )}
@@ -595,6 +697,7 @@ export default function AttendanceWorkstationPage() {
                           type="button"
                           onClick={() => {
                             setCorrectionStudentId(student.id);
+                            setCorrectionRequestedStatus(currentStatus === 'absent' ? 'present' : 'late');
                             setShowCorrectionModal(true);
                           }}
                           className="px-3 py-2 text-xs font-semibold text-lpc-navy-800 hover:bg-lpc-navy-50 border border-lpc-navy-200 rounded-lg transition-colors flex items-center gap-1 min-h-[44px]"
@@ -737,8 +840,25 @@ export default function AttendanceWorkstationPage() {
             ) : (
               <form onSubmit={handleSendCorrectionRequest} className="space-y-3">
                 <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="corr-status">
+                    Target Status
+                  </label>
+                  <select
+                    id="corr-status"
+                    value={correctionRequestedStatus}
+                    onChange={(e) => setCorrectionRequestedStatus(e.target.value as AttendanceStatus)}
+                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white"
+                  >
+                    <option value="present">Present</option>
+                    <option value="late">Late</option>
+                    <option value="excused">Excused</option>
+                    <option value="absent">Absent</option>
+                  </select>
+                </div>
+
+                <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="corr-reason">
-                    Mandatory Reason for Correction
+                    Mandatory Reason for Correction <span className="text-rose-500">*</span>
                   </label>
                   <textarea
                     id="corr-reason"
