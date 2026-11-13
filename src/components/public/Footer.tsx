@@ -212,16 +212,30 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Disclaimers */}
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2 text-center md:text-left">
+        <div className="pt-6 border-t border-lpc-navy-900/80 flex flex-col lg:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-center lg:text-left max-w-xl">
             <ShieldAlert className="w-4 h-4 text-lpc-gold-400 shrink-0" />
             <p>
               Provisional synthetic implementation for structural review. Course details, faculty profiles, and student data are synthetic placeholders. Official assets and policies await LPC verification.
             </p>
           </div>
 
-          <div className="text-slate-400 shrink-0">
-            &copy; {new Date().getFullYear()} Language Proficiency Center (LPC), Bangladesh.
+          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+            {/* Self-Branding / Designer Credit */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/95 border border-slate-800 hover:border-lpc-gold-500/60 transition-all text-xs shadow-inner group">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lpc-gold-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-lpc-gold-500"></span>
+              </span>
+              <span className="text-slate-400 font-medium">Website Designed &amp; Developed by</span>
+              <span className="text-lpc-gold-400 font-bold tracking-wide uppercase group-hover:text-white transition-colors">
+                TANVIR AHMAD
+              </span>
+            </div>
+
+            <div className="text-slate-500 text-center sm:text-right text-[11px]">
+              &copy; {new Date().getFullYear()} LPC Bangladesh.
+            </div>
           </div>
         </div>
       </div>

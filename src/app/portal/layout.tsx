@@ -195,10 +195,12 @@ export default function PortalLayout({
           <div>
             Active User: <strong className="text-slate-800">{activeActor.fullName}</strong> • Role: <span className="capitalize font-semibold text-slate-700">{activeActor.role}</span> • Scope: <span className="text-slate-600">{activeActor.assignedBranchIds.join(', ') || 'Global'}</span>
           </div>
-          <div className="flex items-center gap-3 text-slate-400">
-            <span>Class Timings: Asia/Dhaka (BST)</span>
-            <span>•</span>
-            <span>Audit Logging: Active (UTC Stored)</span>
+          <div className="flex items-center gap-3 text-slate-500 text-[11px]">
+            <span>System Designed &amp; Engineered by <strong className="text-slate-800 font-semibold">TANVIR AHMAD</strong></span>
+            <span className="text-slate-300">•</span>
+            <span>Asia/Dhaka (BST)</span>
+            <span className="text-slate-300">•</span>
+            <span>Audit Active</span>
           </div>
         </div>
       </footer>
