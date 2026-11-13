@@ -37,6 +37,7 @@ export default function PortalLayout({
     // Synchronize demo session cookie so server route handlers can identify the actor
     if (typeof document !== 'undefined') {
       document.cookie = `lpc_demo_user=${activeActorId}; path=/; SameSite=Lax`;
+      window.dispatchEvent(new CustomEvent('lpc_actor_change', { detail: activeActorId }));
     }
   }, [activeActorId]);
 

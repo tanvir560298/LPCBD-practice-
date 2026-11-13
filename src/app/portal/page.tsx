@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Calendar,
@@ -27,6 +27,28 @@ import { getDhakaDateString, formatDhakaTimeOnly } from '@/lib/timeUtils';
 
 export default function PortalDashboard() {
   const [selectedTeacherId, setSelectedTeacherId] = useState<string>('t-01');
+
+  useEffect(() => {
+    // Read from cookie on initial mount
+    if (typeof document !== 'undefined') {
+      const match = document.cookie.match(new RegExp('(^| )lpc_demo_user=([^;]+)'));
+      const cookieUser = match ? match[2] : null;
+      if (cookieUser && (cookieUser === 't-01' || cookieUser === 't-02')) {
+        setSelectedTeacherId(cookieUser);
+      }
+    }
+
+    // Listen for live actor switch in portal header
+    const handleActorChange = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail && (customEvent.detail === 't-01' || customEvent.detail === 't-02')) {
+        setSelectedTeacherId(customEvent.detail);
+      }
+    };
+    window.addEventListener('lpc_actor_change', handleActorChange);
+    return () => window.removeEventListener('lpc_actor_change', handleActorChange);
+  }, []);
+
   const todayDhaka = getDhakaDateString();
 
   const activeTeacher =
