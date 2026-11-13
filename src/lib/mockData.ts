@@ -1,5 +1,6 @@
 import {
   UserProfile,
+  AuthenticatedActor,
   Branch,
   Course,
   Batch,
@@ -9,6 +10,74 @@ import {
   AttendanceSheet,
 } from './attendanceTypes';
 import { getDhakaDateString } from './timeUtils';
+
+export const SYNTHETIC_USERS: AuthenticatedActor[] = [
+  {
+    id: 't-01',
+    fullName: 'Dr. Anisur Rahman',
+    email: 'anisur.rahman@lpcbd.demo',
+    role: 'teacher',
+    assignedBranchIds: ['br-dhaka'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
+  {
+    id: 't-02',
+    fullName: 'Shahana Parveen',
+    email: 'shahana.parveen@lpcbd.demo',
+    role: 'teacher',
+    assignedBranchIds: ['br-dhaka'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
+  {
+    id: 't-03',
+    fullName: 'Mahmudul Hasan',
+    email: 'mahmudul.hasan@lpcbd.demo',
+    role: 'teacher',
+    assignedBranchIds: ['br-chattogram'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
+  {
+    id: 't-disabled',
+    fullName: 'Deactivated Instructor',
+    email: 'disabled.teacher@lpcbd.demo',
+    role: 'teacher',
+    assignedBranchIds: ['br-dhaka'],
+    accountStatus: 'disabled',
+    isSyntheticDemo: true,
+  },
+  {
+    id: 'coord-dhaka',
+    fullName: 'Nasrin Sultana',
+    email: 'nasrin.sultana@lpcbd.demo',
+    role: 'coordinator',
+    branchId: 'br-dhaka',
+    assignedBranchIds: ['br-dhaka'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
+  {
+    id: 'coord-ctg',
+    fullName: 'Tanveer Hossain',
+    email: 'tanveer.hossain@lpcbd.demo',
+    role: 'coordinator',
+    branchId: 'br-chattogram',
+    assignedBranchIds: ['br-chattogram'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
+  {
+    id: 'admin-01',
+    fullName: 'Farhan Ahmed',
+    email: 'farhan.ahmed@lpcbd.demo',
+    role: 'admin',
+    assignedBranchIds: ['br-dhaka', 'br-chattogram', 'br-rajshahi', 'br-coxsbazar'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
+];
 
 export const SYNTHETIC_TEACHERS: UserProfile[] = [
   {
@@ -259,6 +328,17 @@ export const SYNTHETIC_BATCHES: Batch[] = [
     status: 'in_progress',
     schedulePattern: 'Sun, Wed 03:30 - 05:00 PM BST',
   },
+  {
+    id: 'batch-ctg-01',
+    courseId: 'c-01',
+    branchId: 'br-chattogram',
+    name: 'Spoken English — CTG Batch 01 (Agrabad)',
+    code: 'SE-CTG-01',
+    startDate: '2026-11-01',
+    endDate: '2027-01-25',
+    status: 'in_progress',
+    schedulePattern: 'Sun, Tue, Thu 10:00 - 11:30 AM BST',
+  },
 ];
 
 export const SYNTHETIC_STUDENTS: Student[] = [
@@ -355,6 +435,33 @@ export const SYNTHETIC_CLASS_SESSIONS: ClassSession[] = [
     timezone: 'Asia/Dhaka',
     assignedTeacherId: 't-02', // Shahana Parveen
     status: 'scheduled',
+  },
+  {
+    id: 'sess-ctg-01',
+    batchId: 'batch-ctg-01',
+    sessionNumber: 1,
+    title: 'Introductory Phonetics & Speech Mechanics',
+    room: 'Room 101 (Chattogram Center)',
+    sessionDate: todayDhaka,
+    startTime: '10:00',
+    endTime: '11:30',
+    timezone: 'Asia/Dhaka',
+    assignedTeacherId: 't-03', // Mahmudul Hasan (Chattogram Branch)
+    status: 'scheduled',
+  },
+  {
+    id: 'sess-cancelled-01',
+    batchId: 'batch-se-44',
+    sessionNumber: 7,
+    title: 'Mid-Term Review & Impromptu Presentation',
+    room: 'Room 302',
+    sessionDate: '2026-11-20',
+    startTime: '10:00',
+    endTime: '11:30',
+    timezone: 'Asia/Dhaka',
+    assignedTeacherId: 't-01',
+    status: 'cancelled',
+    cancellationReason: 'Official National Holiday (National Revolution & Solidarity Day Observed)',
   },
 ];
 

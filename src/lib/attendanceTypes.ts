@@ -8,7 +8,20 @@ export interface UserProfile {
   email: string;
   role: UserRole;
   assignedBranchIds: string[];
+  branchId?: string; // Specific authorized branch for coordinators
   department?: string;
+  accountStatus?: 'active' | 'disabled';
+}
+
+export interface AuthenticatedActor {
+  id: string;
+  fullName: string;
+  email: string;
+  role: UserRole;
+  branchId?: string; // Authorized branch for coordinators
+  assignedBranchIds: string[];
+  accountStatus: 'active' | 'disabled';
+  isSyntheticDemo: boolean;
 }
 
 export interface Branch {

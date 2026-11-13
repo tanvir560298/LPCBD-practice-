@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { receivedEnquiries } from '@/lib/enquiryStore';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 interface EnquiryPayload {
   fullName: string;
@@ -11,6 +12,19 @@ interface EnquiryPayload {
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limiting to protect public admissions enquiry from automated submission abuse
+  const clientIp = request.headers.get('x-forwarded-for') || '127.0.0.1';
+  const rateLimit = checkRateLimit(`enquiry:${clientIp}`, 15, 60_000);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Too many enquiry submissions from this IP. Please wait a minute before trying again.',
+      },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { fullName, phone, email, courseSlug, branchId, message } = body as Partial<EnquiryPayload>;

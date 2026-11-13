@@ -15,8 +15,10 @@ import {
   ShieldAlert,
   UserCheck,
   Users,
+  Shield,
+  Layers,
 } from 'lucide-react';
-import { SYNTHETIC_TEACHERS } from '@/lib/mockData';
+import { SYNTHETIC_USERS } from '@/lib/mockData';
 import { INSTITUTION_TIMEZONE, formatDhakaDateTime } from '@/lib/timeUtils';
 
 export default function PortalLayout({
@@ -25,11 +27,18 @@ export default function PortalLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [activeTeacherId, setActiveTeacherId] = useState<string>('t-01');
+  const [activeActorId, setActiveActorId] = useState<string>('t-01');
   const [currentDhakaTime, setCurrentDhakaTime] = useState<string>('');
 
-  const activeTeacher =
-    SYNTHETIC_TEACHERS.find((t) => t.id === activeTeacherId) || SYNTHETIC_TEACHERS[0];
+  const activeActor =
+    SYNTHETIC_USERS.find((u) => u.id === activeActorId) || SYNTHETIC_USERS[0];
+
+  useEffect(() => {
+    // Synchronize demo session cookie so server route handlers can identify the actor
+    if (typeof document !== 'undefined') {
+      document.cookie = `lpc_demo_user=${activeActorId}; path=/; SameSite=Lax`;
+    }
+  }, [activeActorId]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -56,7 +65,7 @@ export default function PortalLayout({
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0 text-slate-950" />
             <span>
-              <strong>PROVISIONAL SYNTHETIC DEMO MODE:</strong> Session-based Attendance System (Asia/Dhaka GMT+6). No real student records or secrets used.
+              <strong>PROVISIONAL SYNTHETIC DEMO MODE:</strong> Role-Scoped Attendance System (Asia/Dhaka GMT+6). No real student records or production secrets used.
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -77,9 +86,15 @@ export default function PortalLayout({
             </div>
             <div>
               <div className="text-sm font-bold tracking-tight text-white flex items-center gap-2">
-                <span>Teacher Attendance Workstation</span>
-                <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">
-                  Authorized Faculty
+                <span>LPC Faculty & Staff Portal</span>
+                <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${
+                  activeActor.role === 'admin'
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                    : activeActor.role === 'coordinator'
+                    ? 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                }`}>
+                  {activeActor.role === 'admin' ? 'Administrator' : activeActor.role === 'coordinator' ? 'Campus Coordinator' : 'Authorized Faculty'}
                 </span>
               </div>
               <div className="text-xs text-slate-400">
@@ -125,21 +140,33 @@ export default function PortalLayout({
               <UserCheck className="w-3.5 h-3.5" />
               <span>Reports</span>
             </Link>
+
+            <Link
+              href="/portal/admin"
+              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+                pathname === '/portal/admin' || pathname === '/portal/admin/import'
+                  ? 'bg-purple-900/60 text-purple-200 border border-purple-700'
+                  : 'text-slate-300 hover:text-white hover:bg-lpc-navy-900'
+              }`}
+            >
+              <Shield className="w-3.5 h-3.5 text-purple-400" />
+              <span>Administration</span>
+            </Link>
           </nav>
 
-          {/* Teacher Profile Switcher (For Demo Inspection) & Exit */}
+          {/* Identity Switcher (For Demo & Verification) & Exit */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 bg-lpc-navy-900 border border-lpc-navy-800 rounded-lg p-1.5 text-xs">
-              <span className="text-slate-400 text-[11px] hidden sm:inline">Simulate Teacher:</span>
+              <span className="text-slate-400 text-[11px] hidden sm:inline">Actor:</span>
               <select
-                value={activeTeacherId}
-                onChange={(e) => setActiveTeacherId(e.target.value)}
+                value={activeActorId}
+                onChange={(e) => setActiveActorId(e.target.value)}
                 className="bg-lpc-navy-950 text-white text-xs rounded border border-slate-700 px-2 py-1 font-medium focus:ring-1 focus:ring-lpc-gold-400"
-                aria-label="Switch Teacher Identity"
+                aria-label="Switch Actor Identity"
               >
-                {SYNTHETIC_TEACHERS.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.fullName} ({t.id === 't-03' ? 'CTG' : 'Dhaka'})
+                {SYNTHETIC_USERS.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.fullName} — {u.role.toUpperCase()} ({u.assignedBranchIds.join(', ')})
                   </option>
                 ))}
               </select>
@@ -147,7 +174,7 @@ export default function PortalLayout({
 
             <Link
               href="/"
-              className="text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-lpc-navy-900 hover:bg-lpc-navy-800 border border-lpc-navy-800 transition-colors flex items-center gap-1"
+              className="text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-lpc-navy-900 hover:bg-lpc-navy-800 border border-lpc-navy-800 transition-colors flex items-center gap-1 min-h-[36px]"
               title="Return to Public Website"
             >
               <ExternalLink className="w-3.5 h-3.5" />
@@ -166,7 +193,7 @@ export default function PortalLayout({
       <footer className="bg-white border-t border-slate-200 py-3 px-4 sm:px-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
-            Logged in as <strong className="text-slate-800">{activeTeacher.fullName}</strong> • Role: Faculty Teacher
+            Active User: <strong className="text-slate-800">{activeActor.fullName}</strong> • Role: <span className="capitalize font-semibold text-slate-700">{activeActor.role}</span> • Scope: <span className="text-slate-600">{activeActor.assignedBranchIds.join(', ') || 'Global'}</span>
           </div>
           <div className="flex items-center gap-3 text-slate-400">
             <span>Class Timings: Asia/Dhaka (BST)</span>
@@ -178,4 +205,3 @@ export default function PortalLayout({
     </div>
   );
 }
-
