@@ -36,3 +36,4 @@ describe('LPC Navigation & Route Mapping Inventory', () => {
     expect(teacherRoutes[0].mappedRoute).toBe('/teachers');
   });
 });
+

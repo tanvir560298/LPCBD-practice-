@@ -88,3 +88,4 @@ Generated headless Chrome screenshots at desktop (`1280x900`) and mobile (`390x8
 - `docs/screenshots/portal-dashboard-desktop.png`
 - `docs/screenshots/attendance-workstation-desktop.png`
 - `docs/screenshots/attendance-workstation-mobile.png`
+

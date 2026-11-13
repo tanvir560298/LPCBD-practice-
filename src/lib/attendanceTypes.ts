@@ -131,3 +131,4 @@ export interface CorrectionRequest {
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
 }
+

@@ -224,3 +224,4 @@ CREATE POLICY "Teachers can update attendance records for unsubmitted drafts" ON
         AND ast.status = 'draft'
     )
   );
+

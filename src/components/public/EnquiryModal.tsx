@@ -25,6 +25,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [confirmationCode, setConfirmationCode] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -32,28 +33,41 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-
-    // Validation
-    if (!fullName.trim()) {
-      setErrorMessage('Please provide your full name.');
-      return;
-    }
-    if (!phone.trim() || phone.trim().length < 9) {
-      setErrorMessage('Please provide a valid Bangladeshi phone or mobile number.');
-      return;
-    }
+    setFieldErrors({});
 
     setIsSubmitting(true);
 
     try {
-      // Simulate real asynchronous server validation and admission logging
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const response = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName,
+          phone,
+          email: email || undefined,
+          courseSlug: selectedCourse,
+          branchId: selectedBranch,
+          message: message || undefined,
+        }),
+      });
 
-      const code = `ENQ-${Date.now().toString().slice(-6)}`;
-      setConfirmationCode(code);
+      const result = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(result.error || 'Failed to submit enquiry.');
+        if (result.errors) {
+          setFieldErrors(result.errors);
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      setConfirmationCode(result.referenceCode);
       setIsSuccess(true);
     } catch {
-      setErrorMessage('Failed to submit enquiry. Please verify your connection and try again.');
+      setErrorMessage('Network error occurred. Unable to reach LPC admissions server.');
     } finally {
       setIsSubmitting(false);
     }
@@ -62,6 +76,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   const handleReset = () => {
     setIsSuccess(false);
     setErrorMessage(null);
+    setFieldErrors({});
     setConfirmationCode(null);
     setFullName('');
     setPhone('');
@@ -149,8 +164,13 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Tanzim Ahmed"
-                  className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-lpc-gold-500 focus:border-lpc-gold-500"
+                  className={`w-full px-3.5 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-lpc-gold-500 ${
+                    fieldErrors.fullName ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300'
+                  }`}
                 />
+                {fieldErrors.fullName && (
+                  <p className="text-[11px] text-rose-600 mt-1">{fieldErrors.fullName}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -165,8 +185,13 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="017XXXXXXXX"
-                    className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-lpc-gold-500 focus:border-lpc-gold-500"
+                    className={`w-full px-3.5 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-lpc-gold-500 ${
+                      fieldErrors.phone ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300'
+                    }`}
                   />
+                  {fieldErrors.phone && (
+                    <p className="text-[11px] text-rose-600 mt-1">{fieldErrors.phone}</p>
+                  )}
                 </div>
 
                 <div>
@@ -179,8 +204,13 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="learner@example.com"
-                    className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-lpc-gold-500 focus:border-lpc-gold-500"
+                    className={`w-full px-3.5 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-lpc-gold-500 ${
+                      fieldErrors.email ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300'
+                    }`}
                   />
+                  {fieldErrors.email && (
+                    <p className="text-[11px] text-rose-600 mt-1">{fieldErrors.email}</p>
+                  )}
                 </div>
               </div>
 
@@ -257,7 +287,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               </div>
 
               <p className="text-[11px] text-slate-400 text-center leading-normal">
-                Your personal contact information is used strictly by LPC Bangladesh admission counselors and is never shared with third parties.
+                Your contact details are encrypted and accessed solely by LPC admissions coordinators.
               </p>
             </form>
           </div>

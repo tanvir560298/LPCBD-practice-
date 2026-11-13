@@ -18,3 +18,4 @@ VALUES
   ('c1000000-0000-0000-0000-000000000003', 'english-for-professionals', 'Executive English & Business Communication', 'Professional Skills', 'Corporate executives and managers', 'Upper-Intermediate', 8, 32),
   ('c1000000-0000-0000-0000-000000000004', 'english-for-teens', 'English Communication for Young Learners & Teens', 'Young Learners', 'School students ages 11-16', 'Beginner to Intermediate', 12, 36)
 ON CONFLICT DO NOTHING;
+

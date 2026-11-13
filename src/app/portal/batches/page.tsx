@@ -70,13 +70,16 @@ export default function PortalBatchesPage() {
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
                 <Link
-                  href="/portal"
+                  href={`/portal/batches/${batch.id}`}
                   className="text-xs font-bold text-lpc-navy-800 hover:text-lpc-navy-950 flex items-center gap-1"
                 >
-                  <span>View Scheduled Sessions &rarr;</span>
+                  <span>Cohort Details & Sessions &rarr;</span>
                 </Link>
+                <span className="text-[11px] text-slate-400">
+                  {branch?.city}
+                </span>
               </div>
             </div>
           );
@@ -85,3 +88,4 @@ export default function PortalBatchesPage() {
     </div>
   );
 }
+

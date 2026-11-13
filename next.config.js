@@ -49,6 +49,16 @@ const nextConfig = {
         destination: '/schools',
         permanent: true,
       },
+      {
+        source: '/l-p-c-school/lpc-laboratory-school-college-dhaka',
+        destination: '/schools/dhaka',
+        permanent: true,
+      },
+      {
+        source: '/l-p-c-school/lpc-laboratory-school-college-rajshahi',
+        destination: '/schools/rajshahi',
+        permanent: true,
+      },
     ];
   },
 };

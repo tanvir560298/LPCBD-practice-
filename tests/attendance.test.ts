@@ -105,3 +105,4 @@ describe('LPC Attendance Domain Rules', () => {
     expect(sanitize(safeInput)).toBe('Tanzila Akhter');
   });
 });
+

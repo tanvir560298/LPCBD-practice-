@@ -12,35 +12,59 @@ import {
   Loader2,
   Building,
 } from 'lucide-react';
-import { SYNTHETIC_BRANCHES } from '@/lib/mockData';
+import { SYNTHETIC_BRANCHES, SYNTHETIC_COURSES } from '@/lib/mockData';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [branch, setBranch] = useState('br-dhaka');
-  const [subject, setSubject] = useState('Admission Inquiry');
+  const [courseSlug, setCourseSlug] = useState('spoken-english');
   const [message, setMessage] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [referenceCode, setReferenceCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!name.trim() || !phone.trim() || !message.trim()) {
-      setError('Please fill in your name, phone number, and query message.');
-      return;
-    }
+    setFieldErrors({});
 
     setLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 700));
+      const response = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: name,
+          phone,
+          email: email || undefined,
+          courseSlug,
+          branchId: branch,
+          message: message || undefined,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error || 'Failed to submit inquiry.');
+        if (result.errors) {
+          setFieldErrors(result.errors);
+        }
+        setLoading(false);
+        return;
+      }
+
+      setReferenceCode(result.referenceCode);
       setSubmitted(true);
     } catch {
-      setError('Submission failed. Please try again or call our helpdesk directly.');
+      setError('Network communication failed. Please check your connection or contact our helpline directly.');
     } finally {
       setLoading(false);
     }
@@ -74,6 +98,12 @@ export default function ContactPage() {
               <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
                 Thank you, <strong className="text-slate-800">{name}</strong>. An LPC admissions advisor from the selected branch will respond to you within 24 hours.
               </p>
+              {referenceCode && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 max-w-xs mx-auto text-xs text-slate-600">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Tracking Reference</span>
+                  <span className="text-base font-mono font-bold text-lpc-navy-900">{referenceCode}</span>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => {
@@ -82,6 +112,7 @@ export default function ContactPage() {
                   setPhone('');
                   setEmail('');
                   setMessage('');
+                  setReferenceCode(null);
                 }}
                 className="mt-4 px-5 py-2.5 bg-lpc-navy-800 text-white rounded-lg text-xs font-bold"
               >
@@ -111,8 +142,13 @@ export default function ContactPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Tanzim Ahmed"
-                    className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-lpc-gold-500"
+                    className={`w-full px-3.5 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-lpc-gold-500 ${
+                      fieldErrors.fullName ? 'border-rose-400 bg-rose-50/20' : 'border-slate-300'
+                    }`}
                   />
+                  {fieldErrors.fullName && (
+                    <p className="text-[11px] text-rose-600 mt-1">{fieldErrors.fullName}</p>
+                  )}
                 </div>
 
                 <div>
@@ -126,8 +162,13 @@ export default function ContactPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="017XXXXXXXX"
-                    className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-lpc-gold-500"
+                    className={`w-full px-3.5 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-lpc-gold-500 ${
+                      fieldErrors.phone ? 'border-rose-400 bg-rose-50/20' : 'border-slate-300'
+                    }`}
                   />
+                  {fieldErrors.phone && (
+                    <p className="text-[11px] text-rose-600 mt-1">{fieldErrors.phone}</p>
+                  )}
                 </div>
               </div>
 
@@ -142,8 +183,13 @@ export default function ContactPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="learner@example.com"
-                    className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-lpc-gold-500"
+                    className={`w-full px-3.5 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-lpc-gold-500 ${
+                      fieldErrors.email ? 'border-rose-400 bg-rose-50/20' : 'border-slate-300'
+                    }`}
                   />
+                  {fieldErrors.email && (
+                    <p className="text-[11px] text-rose-600 mt-1">{fieldErrors.email}</p>
+                  )}
                 </div>
 
                 <div>
@@ -166,20 +212,20 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="cf-subject">
-                  Inquiry Topic
+                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="cf-course">
+                  Course of Interest
                 </label>
                 <select
-                  id="cf-subject"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  id="cf-course"
+                  value={courseSlug}
+                  onChange={(e) => setCourseSlug(e.target.value)}
                   className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-lpc-gold-500"
                 >
-                  <option value="Admission Inquiry">Course Admission & Placement Test</option>
-                  <option value="IELTS Schedule">IELTS Intensive & Mock Exams</option>
-                  <option value="Corporate Training">Corporate / Institutional Training</option>
-                  <option value="Access Program">Access Program Information</option>
-                  <option value="General Question">General Academic Question</option>
+                  {SYNTHETIC_COURSES.map((c) => (
+                    <option key={c.slug} value={c.slug}>
+                      {c.title}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -206,7 +252,7 @@ export default function ContactPage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Sending Inquiry...</span>
+                    <span>Submitting Inquiry to Admissions...</span>
                   </>
                 ) : (
                   <>

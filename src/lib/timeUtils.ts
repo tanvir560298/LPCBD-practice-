@@ -46,3 +46,4 @@ export function isSessionToday(sessionDate: string): boolean {
   const todayDhaka = getDhakaDateString();
   return sessionDate === todayDhaka;
 }
+

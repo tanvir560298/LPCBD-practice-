@@ -1,11 +1,14 @@
 # Project Status: Language Proficiency Center (LPC), Bangladesh
 
-*Last Updated: 13 November 2026 (Phase 1 Completed)*
+*Last Updated: 13 November 2026 (Phase 1 & Phase 2 Active)*
 
 ## 1. Implementation Summary
-- **Phase 1: Design Prototype** has been fully implemented, built, verified, and screen-captured.
-- Greenfield Next.js 14 App Router project created with TypeScript, Tailwind CSS, Lucide icons, Vitest, and headless Chrome verification.
-- Public site and Teacher Attendance Portal are completely decoupled into distinct full-screen environments, linked by the header Teacher Portal action.
+- **Phase 1: Design Prototype** and **Phase 2: Public Content, IA & Workflows** are complete and verified.
+- Decoupled public portal and faculty workstation running on Next.js 14 App Router, TypeScript, and Tailwind CSS.
+- Real `/api/enquiry` server endpoint implemented with field-specific validations, tracking codes (`ENQ-...`), and integration into both `EnquiryModal` and `/contact`.
+- Explicit legacy 301/308 redirects implemented in `next.config.js` and verified.
+- SEO dynamic XML sitemap (`/sitemap.xml`) and search bot exclusion rules (`/robots.txt` blocking `/portal` and `/api`) active.
+- Added `/portal/batches/[id]` route displaying full cohort session timeline and active student roster.
 
 ## 2. Route & Architecture Directory
 All 17 original navigation destinations plus portal workflows are live:
@@ -23,42 +26,51 @@ All 17 original navigation destinations plus portal workflows are live:
 - `/community/alumni`: Alumni Network & Mentorship.
 - `/blog`: ELT Pedagogical Insights & Articles.
 - `/branches`: Campus Locations (Dhaka, Chattogram, Rajshahi, Cox's Bazar).
-- `/contact`: Admissions Contact Form with server validation.
+- `/contact`: Admissions Contact Form integrated with `/api/enquiry`.
 - `/newsletter`: Auxiliary newsletter subscription.
+- `/sitemap.xml`: Dynamic XML sitemap listing public pages and active course URLs.
+- `/robots.txt`: Search crawler directives allowing public pages and explicitly disallowing `/portal/` and `/api/`.
+- `/api/enquiry`: Live POST handler with input validation, error mapping, and reference generation.
 - `/portal`: Dedicated Faculty Attendance Dashboard (Today's Scheduled Sessions in Asia/Dhaka time).
-- `/portal/sessions/[id]/attendance`: Interactive Attendance Workstation (Unmarked default, 5-status toggles, bulk present protection, save draft, submit lock, and correction request).
 - `/portal/batches`: Assigned Batches overview.
+- `/portal/batches/[id]`: Detailed cohort schedule, session timeline, and enrolled roster.
+- `/portal/sessions/[id]/attendance`: Interactive Attendance Workstation (Unmarked default, 5-status toggles, bulk present protection, save draft, submit lock, and correction request).
 - `/portal/reports`: Scoped Attendance Reports with raw counts, provisional percentage, and formula-safe CSV export.
 - `/portal/login`: Faculty Demo Login.
 
-## 3. Decisions & Domain Conventions
-1. **Timezone:** Standardized on `Asia/Dhaka` (BST / UTC+6) for all session schedules, display clocks, and attendance dates. Timestamps persist as UTC ISO strings.
-2. **Session Keying:** Attendance is keyed strictly by unique class session (`class_sessions.id`), NOT just `(batch, date)`. This allows a batch to have multiple classes on the same date (demonstrated with Batch 44 having Sessions #5 and #6 today).
-3. **Attendance Statuses:** Strictly follows five states: `unmarked` (default), `present`, `absent`, `late`, `excused`. No automatic default absence.
-4. **Draft vs Submit:** Unsaved edits trigger browser unload warning; final submission is blocked if any unmarked students remain. Submitted sheets lock against further direct edits.
-5. **Brand Wordmark:** Uses an academic typographic crest badge with provisional disclaimer; official vector logo remains pending owner verification.
+## 3. Legacy Redirects Inventory
+- `/about-us` -> `/about` (308 Permanent)
+- `/board-of-directors` -> `/about/leadership` (308 Permanent)
+- `/course` -> `/courses` (308 Permanent)
+- `/product/:slug*` -> `/courses` (308 Permanent)
+- `/access-program-bangladesh` -> `/programs/access` (308 Permanent)
+- `/success-story` -> `/community/stories` (308 Permanent)
+- `/contact-us` -> `/contact` (308 Permanent)
+- `/l-p-c-school` -> `/schools` (308 Permanent)
+- `/l-p-c-school/lpc-laboratory-school-college-dhaka` -> `/schools/dhaka` (308 Permanent)
+- `/l-p-c-school/lpc-laboratory-school-college-rajshahi` -> `/schools/rajshahi` (308 Permanent)
 
-## 4. Assumptions Tracked (Needing Owner Confirmation)
-- Exact tuition fees, concession rates, and bank payment channels (disclaimed on course pages).
-- Official high-resolution vector logo and brand color standards.
-- Production hosting target and live Supabase / PostgreSQL database credentials.
-- Formal roster of Board Trustees and teacher profiles with media consent.
-- Official institutional attendance formula (currently using documented provisional formula: `(Present + Late*0.5) / (Completed - Excused)`).
+## 4. Content Verification Register (08-CONTENT-VERIFICATION.md Tracking)
+| Area / Page | Current Source | Status | Action Required from LPC Owner |
+|---|---|---|---|
+| Official Brand Logo | Typographic crest wordmark | Provisional | Provide official vector logo assets (.svg / .eps) |
+| Board of Directors | Institutional governance shell | Pending | Re-verify current active trustees and bios |
+| Faculty Profiles | Synthetic educator profiles | Prototype | Provide confirmed teacher roster & media consent |
+| Laboratory Schools | Dhaka & Rajshahi campus shells | Pending | Confirm academic term calendars and NCTB streams |
+| Branch Addresses | 4 centers (Dhaka, CTG, Rajshahi, CXB)| Legacy info | Confirm operational status and helpdesk numbers |
+| Tuition Fees | Disclaimed provisional notes | Disclaimed | Provide official fee schedule and scholarship waivers |
+| Attendance Policy | Documented provisional formula | Provisional | Confirm institutional threshold and late penalty policy |
 
 ## 5. Automated Tests & Quality Evidence
-- **Vitest Suite (`tests/attendance.test.ts`, `tests/navigation.test.ts`):** 10 tests passing (100% pass rate).
+- **Vitest Suite (17 tests across 4 files):**
+  - `tests/attendance.test.ts` (8 tests): Dhaka time, multi-session keying, unmarked default, bulk overwrite protection, submission lock, CSV sanitization.
+  - `tests/navigation.test.ts` (2 tests): All 17 destinations mapped, duplicate menu consolidated.
+  - `tests/enquiry.test.ts` (4 tests): Validation rejection, email formatting, tracking code generation, admin read.
+  - `tests/redirects.test.ts` (3 tests): 301 legacy redirects, no blanket redirect to home.
 - **TypeScript Typecheck (`npm run typecheck`):** 0 errors.
-- **Production Build (`npm run build`):** 22/22 static pages generated successfully.
-- **Responsive Screenshots (`docs/screenshots/`):**
-  - `homepage-desktop.png` (1280x900)
-  - `homepage-mobile.png` (390x844)
-  - `courses-desktop.png` (1280x900)
-  - `course-detail-desktop.png` (1280x900)
-  - `course-detail-mobile.png` (390x844)
-  - `portal-dashboard-desktop.png` (1280x900)
-  - `attendance-workstation-desktop.png` (1280x900)
-  - `attendance-workstation-mobile.png` (390x844)
+- **Production Build (`npm run build`):** 25/25 routes compiled and validated.
 
-## 6. Next Steps (Phase 2 & Phase 3)
-- Phase 2: Refine public content and live enquiry submission endpoint (`/api/enquiry`), complete legacy 301 redirect inventory checks, and dynamic sitemap.
-- Phase 3: Supabase Auth integration, live Row-Level Security policy verification under ordinary teacher vs coordinator JWTs, and admin cohort management.
+## 6. Next Steps (Phase 3)
+- Supabase Auth integration for Teacher, Coordinator, and Admin identities.
+- Row-Level Security verification against unauthorized cross-batch and cross-branch requests.
+- Admin portal for cohort creation, student enrollment, and teacher assignments.
