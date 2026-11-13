@@ -77,6 +77,7 @@ All 17 original navigation destinations plus administrative and portal workflows
 
 ## 4. Documentation & Operational Runbooks
 - [HANDOFF_REVIEW.md](file:///Users/tanvir/Desktop/open%20folder/HANDOFF_REVIEW.md): Formal handoff dossier prepared for Codex review.
+- [docs/CONTENT_VERIFICATION_REGISTER.md](file:///Users/tanvir/Desktop/open%20folder/docs/CONTENT_VERIFICATION_REGISTER.md): Source and owner content verification tracking table (16 verified items & owner action register).
 - [docs/DATABASE_OPERATIONS.md](file:///Users/tanvir/Desktop/open%20folder/docs/DATABASE_OPERATIONS.md): PostgreSQL schema, RLS policies, backup and restore commands, and rollback strategy.
 - [supabase/migrations/20261113000000_init_lpc_attendance.sql](file:///Users/tanvir/Desktop/open%20folder/supabase/migrations/20261113000000_init_lpc_attendance.sql): SQL migration file.
 - [supabase/seed.sql](file:///Users/tanvir/Desktop/open%20folder/supabase/seed.sql): Synthetic seed data.
