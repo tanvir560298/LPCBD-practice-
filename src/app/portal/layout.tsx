@@ -81,8 +81,12 @@ export default function PortalLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
           {/* Brand & Portal Label */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-lpc-navy-800 border border-lpc-navy-700 flex items-center justify-center font-serif font-black text-white text-base">
-              LPC
+            <div className="w-9 h-9 rounded-lg bg-white p-1 border border-slate-700/60 shadow-xs flex items-center justify-center shrink-0">
+              <img
+                src="/assets/images/lpc-emblem.png"
+                alt="LPC Official Emblem"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="text-sm font-bold tracking-tight text-white flex items-center gap-2">

@@ -64,8 +64,15 @@ export default function PortalLoginPage() {
     <div className="max-w-md mx-auto my-12 p-6 sm:p-8 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 rounded-xl bg-lpc-navy-900 text-white flex items-center justify-center mx-auto shadow-sm">
-          <Lock className="w-6 h-6 text-lpc-gold-400" />
+        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-slate-200 shadow-md mx-auto flex items-center justify-center relative">
+          <img
+            src="/assets/images/lpc-emblem.png"
+            alt="LPC Official Emblem"
+            className="w-full h-full object-contain"
+          />
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-lpc-navy-900 border-2 border-white flex items-center justify-center text-lpc-gold-400">
+            <Lock className="w-3 h-3" />
+          </div>
         </div>
         <h1 className="text-2xl font-bold text-slate-900">Faculty & Staff Login</h1>
         <p className="text-xs text-slate-500">

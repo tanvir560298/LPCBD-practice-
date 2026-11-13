@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: 'Language Proficiency Center (LPC) | Bangladesh',
   description: 'Premier English language training, communicative fluency, IELTS preparation, and teacher development in Bangladesh.',
   keywords: ['LPC Bangladesh', 'Language Proficiency Center', 'Spoken English Dhaka', 'IELTS Preparation Bangladesh', 'English Access Program'],
+  icons: {
+    icon: '/assets/images/lpc-emblem.png',
+    shortcut: '/assets/images/lpc-emblem.png',
+    apple: '/assets/images/lpc-emblem.png',
+  },
 };
 
 export default function RootLayout({

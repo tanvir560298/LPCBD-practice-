@@ -18,18 +18,19 @@ export const BrandWordmark: React.FC<BrandWordmarkProps> = ({
       className="inline-flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-lpc-gold-500 rounded-lg p-1"
       aria-label="Language Proficiency Center (LPC) Bangladesh Home"
     >
-      {/* Typographic Crest Badge */}
-      <div className={`relative flex items-center justify-center font-serif font-black rounded-lg shadow-sm border transition-transform group-hover:scale-105 ${
+      {/* Official LPC Emblem Mark */}
+      <div className={`relative flex items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-105 shrink-0 ${
         isDark
-          ? 'bg-lpc-navy-800 border-lpc-navy-700 text-white'
-          : 'bg-white border-slate-200 text-lpc-navy-800'
+          ? 'bg-white p-1 shadow-xs border border-slate-200/90'
+          : 'bg-white p-1 shadow-xs border border-slate-700/60'
       } ${
-        size === 'sm' ? 'w-10 h-10 text-base' : size === 'lg' ? 'w-14 h-14 text-2xl' : 'w-11 h-11 text-lg'
+        size === 'sm' ? 'w-10 h-10' : size === 'lg' ? 'w-14 h-14' : 'w-11 h-11'
       }`}>
-        <span className="tracking-tighter">LPC</span>
-        <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-lpc-gold-500 rounded-full border-2 border-white flex items-center justify-center">
-          <span className="w-1.5 h-1.5 bg-lpc-navy-900 rounded-full" />
-        </div>
+        <img
+          src="/assets/images/lpc-emblem.png"
+          alt="LPC Official Emblem"
+          className="w-full h-full object-contain"
+        />
       </div>
 
       {/* Institution Title */}
