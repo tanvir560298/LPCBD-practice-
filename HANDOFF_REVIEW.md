@@ -158,3 +158,4 @@ npm start
 ### Production Deployment Boundaries
 - **DO NOT** deploy to live DNS (`lpcbd.org`) or overwrite existing WordPress hosting without explicit written authorization from the LPC owner.
 - **DO NOT** import real student personal identifiable information (PII) into staging or local databases.
+

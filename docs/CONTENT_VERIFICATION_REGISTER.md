@@ -48,3 +48,4 @@ Before production launch and live domain deployment, the following 8 items must 
 - Never remove an unverified activity silently; keep the shell disclaimed and track missing data here.
 - Never publish an empty page or insert placeholder `#` links.
 - Re-verify this register whenever the project owner supplies new documentation.
+

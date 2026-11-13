@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="seGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="320" fill="url(#seGrad)" />
+  <circle cx="500" cy="80" r="140" fill="#3b82f6" opacity="0.12" />
+  <circle cx="100" cy="260" r="90" fill="#f59e0b" opacity="0.1" />
+  <!-- Dialogue Waves -->
+  <g transform="translate(80, 70)">
+    <rect x="0" y="0" width="180" height="70" rx="16" fill="#ffffff" opacity="0.95" />
+    <path d="M 40 70 L 30 85 L 60 70 Z" fill="#ffffff" opacity="0.95" />
+    <text x="90" y="35" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">"Could you elaborate?"</text>
+    <text x="90" y="54" font-family="system-ui, sans-serif" font-size="11" fill="#64748b" text-anchor="middle">Pronunciation &amp; Rhythm</text>
+  </g>
+  <g transform="translate(300, 120)">
+    <rect x="0" y="0" width="200" height="70" rx="16" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5" />
+    <path d="M 160 70 L 175 85 L 145 70 Z" fill="#fef3c7" />
+    <text x="100" y="35" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" fill="#92400e" text-anchor="middle">"Precisely my viewpoint."</text>
+    <text x="100" y="54" font-family="system-ui, sans-serif" font-size="11" fill="#b45309" text-anchor="middle">Spontaneous Fluency</text>
+  </g>
+  <rect x="50" y="260" width="130" height="28" rx="14" fill="#38bdf8" opacity="0.2" />
+  <text x="115" y="279" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#7dd3fc" text-anchor="middle">CLT LAB DRILLS</text>
+</svg>

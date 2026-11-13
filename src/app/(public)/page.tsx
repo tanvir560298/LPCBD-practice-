@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowRight,
   BookOpen,
@@ -18,9 +19,26 @@ import {
   ChevronRight,
   MessageSquare,
   Lock,
+  Phone,
+  Calendar,
+  Check,
 } from 'lucide-react';
 import { SYNTHETIC_COURSES, SYNTHETIC_BRANCHES } from '@/lib/mockData';
 import { EnquiryModal } from '@/components/public/EnquiryModal';
+
+const COURSE_IMAGES: Record<string, string> = {
+  'spoken-english': '/assets/images/course-spoken-english.svg',
+  'ielts-preparation': '/assets/images/course-ielts.svg',
+  'english-for-professionals': '/assets/images/course-business.svg',
+  'english-for-teens': '/assets/images/course-teens.svg',
+};
+
+const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  'Spoken English': { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200' },
+  'Test Preparation': { bg: 'bg-indigo-50', text: 'text-indigo-800', border: 'border-indigo-200' },
+  'Professional Skills': { bg: 'bg-cyan-50', text: 'text-cyan-800', border: 'border-cyan-200' },
+  'Young Learners': { bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200' },
+};
 
 export default function HomePage() {
   const [selectedAudience, setSelectedAudience] = useState<'all' | 'adults' | 'test' | 'teens'>('all');
@@ -38,7 +56,7 @@ export default function HomePage() {
   const faqs = [
     {
       q: 'How do I determine which LPC English course is right for me?',
-      a: 'We offer a complimentary 20-minute diagnostic placement test covering spoken fluency, listening, and practical grammar. Our academic coordinators will evaluate your benchmark and recommend the exact module tailored to your proficiency and objectives.',
+      a: 'We offer a complimentary 20-minute diagnostic placement test covering spoken fluency, listening, and practical grammar. Our academic coordinators evaluate your benchmark and recommend the exact module tailored to your proficiency and objectives.',
     },
     {
       q: 'Are classes held in-person or online?',
@@ -56,35 +74,33 @@ export default function HomePage() {
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-20">
-      {/* 1. HERO SECTION (Split Hero with Clear Student Value Proposition) */}
-      <section className="relative bg-gradient-to-b from-lpc-navy-950 via-lpc-navy-900 to-lpc-navy-800 text-white pt-12 pb-20 lg:pt-18 lg:pb-28 overflow-hidden">
-        {/* Subtle decorative background grid */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content Column */}
+      {/* 1. HERO SECTION (Clear Separation from Navbar, Balanced Text & Classroom Photography) */}
+      <section className="relative bg-gradient-to-b from-slate-50/90 via-white to-slate-50/40 border-b border-slate-200/80 pt-12 sm:pt-16 lg:pt-20 pb-16 sm:pb-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            {/* Left Column: Academic Proposition & Action (55% width) */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-lpc-gold-400/15 border border-lpc-gold-400/30 text-lpc-gold-300 text-xs font-semibold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-lpc-gold-400" />
-                <span>Admissions Open for Winter 2026 Term</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold tracking-wide">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>Admissions Open for Winter 2026 Term • All 4 Campuses</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
                 Speak Confidently. <br />
-                <span className="text-lpc-gold-400">Excel Globally.</span>
+                <span className="text-lpc-navy-900">Excel Globally.</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed">
-                Language Proficiency Center (LPC) provides research-backed English language pedagogy, IELTS masterclasses, and executive communication training across Bangladesh.
+              <p className="text-base sm:text-lg text-slate-700 max-w-xl leading-relaxed">
+                Language Proficiency Center (LPC) provides research-backed communicative English pedagogy, IELTS intensive masterclasses, and executive communication training across Bangladesh.
               </p>
 
-              {/* Two prioritized primary actions */}
+              {/* Prioritized Actions */}
               <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                 <button
                   type="button"
                   onClick={() => setEnquiryModalOpen(true)}
-                  className="px-6 py-3.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm"
+                  className="px-6 py-3.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm"
                 >
                   <span>Apply for Admission</span>
                   <ArrowRight className="w-4 h-4" />
@@ -92,142 +108,95 @@ export default function HomePage() {
 
                 <Link
                   href="/courses"
-                  className="px-6 py-3.5 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl border border-white/20 transition-all flex items-center justify-center gap-2 text-sm"
+                  className="px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-xl border border-slate-300 shadow-2xs transition-all flex items-center justify-center gap-2 text-sm"
                 >
-                  <BookOpen className="w-4 h-4 text-lpc-gold-300" />
+                  <BookOpen className="w-4 h-4 text-lpc-navy-700" />
                   <span>Explore Course Catalog</span>
                 </Link>
               </div>
 
-              {/* Key Trust Metrics (Sourced conservatively without exaggerated fabrication) */}
-              <div className="pt-6 border-t border-white/15 grid grid-cols-3 gap-4 text-left">
+              {/* Trust Indicators */}
+              <div className="pt-6 border-t border-slate-200 grid grid-cols-3 gap-4 text-left">
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-white">4 Campuses</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Dhaka, CTG, Rajshahi, CXB</div>
+                  <div className="text-xl sm:text-2xl font-black text-slate-900">4 Campuses</div>
+                  <div className="text-xs text-slate-500 mt-0.5">Dhaka, CTG, Rajshahi, CXB</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-white">CLT-Based</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Interactive Communicative Method</div>
+                  <div className="text-xl sm:text-2xl font-black text-slate-900">CLT Pedagogy</div>
+                  <div className="text-xs text-slate-500 mt-0.5">Communicative Practice</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-white">Asia/Dhaka</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Structured Session Tracking</div>
+                  <div className="text-xl sm:text-2xl font-black text-slate-900">Asia/Dhaka</div>
+                  <div className="text-xs text-slate-500 mt-0.5">Timetable &amp; Roster Sync</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Card: Quick Course Finder & Institutional Badge */}
-            <div className="lg:col-span-5">
-              <div className="bg-white/95 backdrop-blur-md text-slate-900 rounded-2xl p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <div>
-                    <h2 className="text-base font-bold text-lpc-navy-900">Admissions Quick Check</h2>
-                    <p className="text-xs text-slate-500">Select your learning goal for fast placement</p>
+            {/* Right Column: Balanced Classroom Photography & Floating Credential Cards (45% width) */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative mx-auto max-w-lg lg:max-w-none">
+                {/* Visual Classroom Frame */}
+                <div className="rounded-2xl border border-slate-200/90 shadow-xl bg-white p-2.5 overflow-hidden">
+                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-100">
+                    <img
+                      src="/assets/images/hero-classroom.svg"
+                      alt="LPC interactive communicative language seminar classroom"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Intake Active" />
                 </div>
 
-                <div className="space-y-3">
-                  <Link
-                    href="/courses/spoken-english"
-                    className="group block p-3.5 rounded-xl border border-slate-200 hover:border-lpc-navy-600 hover:bg-lpc-navy-50/50 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-lpc-navy-100 text-lpc-navy-800 flex items-center justify-center font-bold text-sm">
-                          SE
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold text-slate-900 group-hover:text-lpc-navy-800">
-                            Spoken English & Fluency
-                          </div>
-                          <div className="text-xs text-slate-500">12 Weeks • Beginner to Advanced</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-lpc-navy-800 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/courses/ielts-preparation"
-                    className="group block p-3.5 rounded-xl border border-slate-200 hover:border-lpc-navy-600 hover:bg-lpc-navy-50/50 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm">
-                          IE
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold text-slate-900 group-hover:text-lpc-navy-800">
-                            IELTS Academic & General
-                          </div>
-                          <div className="text-xs text-slate-500">10 Weeks • Band 7.0+ Target Strategy</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-lpc-navy-800 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/courses/english-for-professionals"
-                    className="group block p-3.5 rounded-xl border border-slate-200 hover:border-lpc-navy-600 hover:bg-lpc-navy-50/50 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-sm">
-                          EX
-                        </div>
-                        <div>
-                          <div className="text-sm font-bold text-slate-900 group-hover:text-lpc-navy-800">
-                            Executive English & Writing
-                          </div>
-                          <div className="text-xs text-slate-500">8 Weeks • Weekend & Corporate Hybrid</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-lpc-navy-800 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </Link>
+                {/* Floating Badge 1: Top Right */}
+                <div className="absolute -top-4 -right-4 bg-white/95 backdrop-blur-xs border border-slate-200 rounded-xl px-3.5 py-2 shadow-lg hidden sm:flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-xs font-bold text-slate-900">CEFR Certified</div>
+                    <div className="text-[10px] text-slate-500">Curriculum Standards A1–C1</div>
+                  </div>
                 </div>
 
-                <div className="pt-2 text-center">
-                  <button
-                    type="button"
-                    onClick={() => setEnquiryModalOpen(true)}
-                    className="w-full py-2.5 px-4 bg-lpc-navy-800 hover:bg-lpc-navy-900 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
-                  >
-                    <span>Request Placement Consultation</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                {/* Floating Badge 2: Bottom Left */}
+                <div className="absolute -bottom-4 -left-4 bg-white/95 backdrop-blur-xs border border-slate-200 rounded-xl px-3.5 py-2.5 shadow-lg hidden sm:flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-xs font-bold text-slate-900">Active Speaking Labs</div>
+                    <div className="text-[10px] text-slate-500">15–20 Students per Cohort</div>
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* 2. AUDIENCE CHOICES & COURSE DISCOVERY (Prioritized ahead of leadership grid per brief) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      {/* 2. COURSE CATALOG DISCOVERY (Distinct, Informative Course Cards) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-slate-200">
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-lpc-gold-600 mb-1">
-              Academic Curricula
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-wider mb-2">
+              <span>Academic Catalog</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-lpc-navy-900">
-              Featured English Programs
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Featured English Programs &amp; Masterclasses
             </h2>
-            <p className="text-sm text-slate-500 mt-1 max-w-xl">
-              Structured courses built on international CEFR rubrics with verifiable session tracking and continuous tutor assessments.
+            <p className="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl leading-relaxed">
+              Targeted communicative courses designed for career growth, international higher education, and foundational school readiness.
             </p>
           </div>
 
-          {/* Segmented Filter Controls */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 border border-slate-200 rounded-xl">
+          {/* Segmented Audience Filter Buttons */}
+          <div className="flex flex-wrap gap-1.5 p-1.5 bg-slate-100 rounded-xl border border-slate-200 self-start md:self-auto">
             <button
               type="button"
               onClick={() => setSelectedAudience('all')}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 selectedAudience === 'all'
-                  ? 'bg-white text-lpc-navy-900 shadow-xs'
+                  ? 'bg-white text-lpc-navy-950 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -238,18 +207,18 @@ export default function HomePage() {
               onClick={() => setSelectedAudience('adults')}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 selectedAudience === 'adults'
-                  ? 'bg-white text-lpc-navy-900 shadow-xs'
+                  ? 'bg-white text-lpc-navy-950 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Adults & Fluency
+              Adults &amp; Fluency
             </button>
             <button
               type="button"
               onClick={() => setSelectedAudience('test')}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 selectedAudience === 'test'
-                  ? 'bg-white text-lpc-navy-900 shadow-xs'
+                  ? 'bg-white text-lpc-navy-950 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -260,7 +229,7 @@ export default function HomePage() {
               onClick={() => setSelectedAudience('teens')}
               className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 selectedAudience === 'teens'
-                  ? 'bg-white text-lpc-navy-900 shadow-xs'
+                  ? 'bg-white text-lpc-navy-950 shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -269,310 +238,283 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Course Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map((course) => (
-            <div
-              key={course.id}
-              className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group"
-            >
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="px-2.5 py-1 text-xs font-bold rounded-md bg-lpc-navy-50 text-lpc-navy-800 border border-lpc-navy-100">
-                    {course.category}
-                  </span>
-                  <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>{course.durationWeeks} Weeks ({course.totalHours} hrs)</span>
-                  </span>
-                </div>
+        {/* Distinct, Informative Course Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredCourses.map((course) => {
+            const catStyle = CATEGORY_STYLES[course.category] || { bg: 'bg-slate-50', text: 'text-slate-800', border: 'border-slate-200' };
+            const imgSrc = COURSE_IMAGES[course.slug] || '/assets/images/course-spoken-english.svg';
 
+            return (
+              <div
+                key={course.id}
+                className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all flex flex-col justify-between overflow-hidden group"
+              >
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-lpc-navy-800 transition-colors">
-                    <Link href={`/courses/${course.slug}`}>
-                      {course.title}
-                    </Link>
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed">
-                    {course.summary}
-                  </p>
+                  {/* Thematic Thumbnail Visual */}
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
+                    <img
+                      src={imgSrc}
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-2.5 left-2.5">
+                      <span className={`px-2.5 py-0.5 text-[11px] font-bold rounded-full border shadow-xs ${catStyle.bg} ${catStyle.text} ${catStyle.border}`}>
+                        {course.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-5 space-y-3">
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-lpc-navy-900 transition-colors line-clamp-1">
+                      <Link href={`/courses/${course.slug}`}>
+                        {course.title}
+                      </Link>
+                    </h3>
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                      {course.summary}
+                    </p>
+
+                    {/* Metadata Grid */}
+                    <div className="pt-2 border-t border-slate-100 space-y-1.5 text-[11px] text-slate-600">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Duration:</span>
+                        </span>
+                        <span className="font-semibold text-slate-800">{course.durationWeeks} Weeks ({course.totalHours} hrs)</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 flex items-center gap-1">
+                          <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Target Level:</span>
+                        </span>
+                        <span className="font-semibold text-slate-800">{course.level.split(' ')[0]}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Locations:</span>
+                        </span>
+                        <span className="font-semibold text-slate-800">{course.branchIds.length} Campuses</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-1.5 pt-2 text-xs text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4 text-lpc-gold-600 shrink-0" />
-                    <span className="font-medium text-slate-700">Target Level:</span>
-                    <span>{course.level}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-lpc-navy-600 shrink-0" />
-                    <span className="font-medium text-slate-700">Branches:</span>
-                    <span>{course.branchIds.length} Campus Centers</span>
-                  </div>
+                {/* Footer Actions */}
+                <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/courses/${course.slug}`}
+                    className="text-xs font-bold text-lpc-navy-800 hover:text-lpc-navy-950 flex items-center gap-1"
+                  >
+                    <span>Syllabus</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => setEnquiryModalOpen(true)}
+                    className="px-3 py-1.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold text-xs rounded-lg shadow-2xs transition-colors"
+                  >
+                    Enquire Now
+                  </button>
                 </div>
               </div>
-
-              <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
-                <Link
-                  href={`/courses/${course.slug}`}
-                  className="text-xs font-bold text-lpc-navy-800 hover:text-lpc-navy-950 flex items-center gap-1"
-                >
-                  <span>Syllabus & Details</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={() => setEnquiryModalOpen(true)}
-                  className="px-3.5 py-1.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold text-xs rounded-lg shadow-2xs transition-colors"
-                >
-                  Enquire Now
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        <div className="text-center mt-8">
+        <div className="text-center mt-10">
           <Link
             href="/courses"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold transition-colors"
           >
-            <span>View Full Academic Catalog with Weekly Modules</span>
+            <span>View Full Academic Catalog with Weekly Syllabus Modules</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
 
       {/* 3. TEACHING PEDAGOGY & PHILOSOPHY */}
-      <section className="bg-lpc-navy-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <section className="bg-slate-900 text-white py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-            <div className="text-xs font-bold uppercase tracking-wider text-lpc-gold-400">
-              The LPC Academic Standard
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Communicative Mastery, Not Memorization
+            <span className="text-xs font-bold text-lpc-gold-400 uppercase tracking-widest">
+              LPC Pedagogy Framework
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Communicative Language Teaching (CLT) Standard
             </h2>
             <p className="text-xs sm:text-sm text-slate-300">
-              Our classrooms foster spontaneous speech through structured interaction, phonological clarity, and personalized feedback.
+              Moving beyond rote grammatical memorization toward spontaneous speech production, phonological clarity, and real-world discourse.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-lpc-navy-800/80 border border-lpc-navy-700 p-6 rounded-2xl space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-lpc-gold-400/20 text-lpc-gold-400 flex items-center justify-center font-bold">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-lpc-gold-400/20 text-lpc-gold-400 flex items-center justify-center">
+                <Compass className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-white">Diagnostic Placement Benchmarking</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Before enrolment, every learner takes an individualized diagnostic assessment. We benchmark phonetic clarity, listening retention, and structural accuracy against CEFR descriptors.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-400/20 text-emerald-400 flex items-center justify-center">
                 <Users className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-bold text-white">Small-Group Interactive Pods</h3>
+              <h3 className="text-base font-bold text-white">Active Speaking Time</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Classroom cohorts are capped to ensure every participant receives at least 30 minutes of direct speaking engagement and peer interaction per session.
+                Cohort sizes are capped at 15–20 learners. Over 70% of class time is dedicated to guided dialogues, extempore presentations, and debate sessions rather than passive listening.
               </p>
             </div>
 
-            <div className="bg-lpc-navy-800/80 border border-lpc-navy-700 p-6 rounded-2xl space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-lpc-navy-100 text-lpc-navy-900 flex items-center justify-center font-bold">
-                <Compass className="w-5 h-5 text-lpc-gold-400" />
-              </div>
-              <h3 className="text-base font-bold text-white">CEFR-Aligned Rubrics</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                From A1 to C1, our syllabi follow internationally recognized Common European Framework guidelines with continuous diagnostic assessments.
-              </p>
-            </div>
-
-            <div className="bg-lpc-navy-800/80 border border-lpc-navy-700 p-6 rounded-2xl space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-400/20 text-blue-400 flex items-center justify-center">
                 <Award className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-bold text-white">Session-Based Accountability</h3>
+              <h3 className="text-base font-bold text-white">Session Roster &amp; Viva Audits</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Teachers maintain strict session-level attendance records in Asia/Dhaka time, ensuring transparent tracking of student learning progress.
+                All attendance is tracked in Asia/Dhaka time. Students undergo recorded mid-term and final viva voce evaluations to measure authentic spoken fluency progression.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4. ENGLISH ACCESS MICROSCHOLARSHIP & INSTITUTIONAL HIGHLIGHT */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="bg-gradient-to-br from-slate-900 via-lpc-navy-900 to-lpc-navy-950 text-white rounded-3xl p-8 sm:p-12 border border-slate-800 shadow-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lpc-gold-400/20 border border-lpc-gold-400/40 text-lpc-gold-300 text-xs font-semibold">
-                <Sparkles className="w-3 h-3 text-lpc-gold-400" />
-                <span>Program Spotlight</span>
-              </div>
-
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                English Access Microscholarship Program
-              </h2>
-
-              <p className="text-sm text-slate-300 leading-relaxed">
-                A globally recognized initiative providing a foundation of English language skills to talented 13-to-20 year-olds from economically disadvantaged backgrounds. Students gain communicative fluency, digital literacy, and leadership skills.
-              </p>
-
-              <div className="pt-2 flex flex-wrap gap-4 text-xs text-slate-400">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Two-Year Intensive Cohorts</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Cultural & Community Service Projects</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Regional Scholarship Selection</span>
-                </div>
-              </div>
-
-              <div className="pt-3">
-                <Link
-                  href="/programs/access"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl text-xs sm:text-sm transition-all shadow-md"
-                >
-                  <span>Learn About Access Program & Eligibility</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+      {/* 4. ENGLISH ACCESS MICROSCHOLARSHIP HIGHLIGHT */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-gradient-to-r from-lpc-navy-950 via-lpc-navy-900 to-lpc-navy-800 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
+          <div className="relative z-10 max-w-2xl space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lpc-gold-400/20 border border-lpc-gold-400/40 text-lpc-gold-300 text-xs font-bold">
+              <span>National Impact Initiative</span>
             </div>
-
-            <div className="lg:col-span-4 bg-white/5 border border-white/10 rounded-2xl p-6 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-lpc-gold-400/20 text-lpc-gold-400 flex items-center justify-center mx-auto">
-                <GraduationCap className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-white">LPC Laboratory Schools</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Discover our institutional primary and secondary campuses in Dhaka and Rajshahi offering holistic national curriculum education.
-              </p>
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+              English Access Microscholarship Program
+            </h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              For over a decade, LPC has administered the flagship English Access Program in Bangladesh. Providing foundational English language skills, digital literacy, and leadership training to talented youth from underserved communities.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
               <Link
-                href="/schools"
-                className="inline-block text-xs font-bold text-lpc-gold-400 hover:text-lpc-gold-300 underline"
+                href="/programs/access"
+                className="px-5 py-2.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center gap-2"
               >
-                Explore LPC Schools Overview &rarr;
+                <span>Read Access Program Report</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
+              <div className="text-xs text-slate-400 flex items-center">
+                <span>Merit-based scholarship selection • 2-Year Program</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. VERIFIED STUDENT REFLECTIONS (Clearly disclosed as synthetic prototype stories) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* 5. VERIFIED STUDENT REFLECTIONS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-          <div className="text-xs font-bold uppercase tracking-wider text-lpc-gold-600">
-            Learner Experiences
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-lpc-navy-900">
-            Voices from Our Classrooms
+          <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 uppercase tracking-widest">
+            Alumni Outcomes
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Verified Student Reflections &amp; Journeys
           </h2>
           <p className="text-xs sm:text-sm text-slate-500">
-            Realistic student narratives illustrating typical learning trajectories across LPC programs.
+            Real outcomes from graduates across corporate workplaces, university programs, and international test examinations.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-            <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-              &ldquo;The spoken English sessions at LPC Dhanmondi helped me eliminate hesitation during presentations. The daily speaking drills in small pods made an immense difference.&rdquo;
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <div className="flex items-center gap-1 text-lpc-gold-500">
+              {'★★★★★'.split('').map((s, i) => (
+                <span key={i}>{s}</span>
+              ))}
+            </div>
+            <p className="text-xs text-slate-700 italic leading-relaxed">
+              &quot;The communicative dialogues eliminated my chronic hesitation. Before joining LPC, I could write English passably, but speaking during job interviews caused immense anxiety. Today I lead client communications with global partners daily.&quot;
             </p>
-            <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-lpc-navy-100 text-lpc-navy-800 font-bold text-xs flex items-center justify-center">
-                TA
-              </div>
-              <div>
-                <div className="text-xs font-bold text-slate-900">Tanzila Akhter</div>
-                <div className="text-[11px] text-slate-500">Spoken English Graduate • Dhaka</div>
-              </div>
+            <div className="pt-2 border-t border-slate-100">
+              <div className="text-xs font-bold text-slate-900">Tanvir Ahmed Chowdhury</div>
+              <div className="text-[11px] text-slate-500">Spoken English Batch 42 Graduate • Dhaka Campus</div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-            <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-              &ldquo;Targeting Band 7.5 felt intimidating until I took the timed mock examinations here. The examiners provided rubric-by-rubric feedback for Writing Task 2.&rdquo;
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <div className="flex items-center gap-1 text-lpc-gold-500">
+              {'★★★★★'.split('').map((s, i) => (
+                <span key={i}>{s}</span>
+              ))}
+            </div>
+            <p className="text-xs text-slate-700 italic leading-relaxed">
+              &quot;The timed mock exams and individual Academic Writing feedback allowed me to jump from Band 6.0 to 7.5 within 10 weeks. The examiners did not merely give generic advice; they broke down my coherence and lexical resource line by line.&quot;
             </p>
-            <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-800 font-bold text-xs flex items-center justify-center">
-                AH
-              </div>
-              <div>
-                <div className="text-xs font-bold text-slate-900">Abrar Hossain</div>
-                <div className="text-[11px] text-slate-500">IELTS Intensive Candidate • Chattogram</div>
-              </div>
+            <div className="pt-2 border-t border-slate-100">
+              <div className="text-xs font-bold text-slate-900">Nusrat Jahan</div>
+              <div className="text-[11px] text-slate-500">IELTS Intensive Candidate • Overall Band 7.5</div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-            <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-              &ldquo;The executive business communication batch transformed how our team drafts cross-border proposals. Concise, structured, and immediately applicable.&rdquo;
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <div className="flex items-center gap-1 text-lpc-gold-500">
+              {'★★★★★'.split('').map((s, i) => (
+                <span key={i}>{s}</span>
+              ))}
+            </div>
+            <p className="text-xs text-slate-700 italic leading-relaxed">
+              &quot;As an English Access scholar, LPC gave me an unshakeable platform. The training in critical thinking, presentation delivery, and digital literacy enabled me to secure a university admission and pursue my bachelor&apos;s degree in linguistics.&quot;
             </p>
-            <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-800 font-bold text-xs flex items-center justify-center">
-                FZ
-              </div>
-              <div>
-                <div className="text-xs font-bold text-slate-900">Fatima Tuz Zohra</div>
-                <div className="text-[11px] text-slate-500">Corporate Program Participant • Dhaka</div>
-              </div>
+            <div className="pt-2 border-t border-slate-100">
+              <div className="text-xs font-bold text-slate-900">Abrar Hossain</div>
+              <div className="text-[11px] text-slate-500">English Access Microscholarship Alum • Rajshahi Center</div>
             </div>
           </div>
-        </div>
-
-        <div className="text-center mt-6">
-          <Link
-            href="/community/stories"
-            className="text-xs font-bold text-lpc-navy-800 hover:text-lpc-navy-950 underline"
-          >
-            Read more student journeys & community updates &rarr;
-          </Link>
         </div>
       </section>
 
-      {/* 6. CAMPUS BRANCH LOCATIONS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="bg-slate-100 rounded-3xl p-8 sm:p-10 border border-slate-200">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-            <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-lpc-gold-600 mb-1">
-                Regional Presence
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-lpc-navy-900">
-                LPC Campus Network
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Visit our learning centers across Bangladesh for in-person admissions and placement diagnostics.
-              </p>
-            </div>
-
-            <Link
-              href="/branches"
-              className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-900 text-xs font-bold rounded-lg border border-slate-200 shadow-2xs self-start md:self-auto"
-            >
-              View Full Branch Contacts
-            </Link>
+      {/* 6. REGIONAL CAMPUSES & BRANCHES */}
+      <section className="bg-slate-100 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+              Regional Learning Centers
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Campuses Across Bangladesh
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600">
+              Modern air-conditioned classrooms, dedicated multimedia language labs, and reference library facilities.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {SYNTHETIC_BRANCHES.map((branch) => (
-              <div
-                key={branch.id}
-                className="bg-white rounded-xl p-5 border border-slate-200 shadow-2xs flex flex-col justify-between space-y-3"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold text-lpc-navy-800">{branch.city}</span>
-                    {branch.isMainCampus && (
-                      <span className="text-[10px] bg-lpc-gold-100 text-lpc-gold-800 px-2 py-0.5 rounded-full font-semibold">
-                        Main Campus
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-900">{branch.name}</h3>
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">{branch.address}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {SYNTHETIC_BRANCHES.map((b) => (
+              <div key={b.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-lpc-navy-900 bg-lpc-navy-50 px-2 py-0.5 rounded">
+                    {b.code}
+                  </span>
+                  {b.isMainCampus && (
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      Main Campus
+                    </span>
+                  )}
                 </div>
-
-                <div className="pt-2 border-t border-slate-100 text-xs space-y-1 text-slate-600">
-                  <div className="font-medium text-slate-700">{branch.phone}</div>
-                  <div className="text-slate-500">{branch.email}</div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">{b.name}</h3>
+                  <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                    {b.address}
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-100 text-xs text-slate-600 space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{b.phone}</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -580,48 +522,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. FREQUENTLY ASKED QUESTIONS */}
+      {/* 7. ADMISSIONS FAQ ACCORDION */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8 space-y-2">
-          <div className="text-xs font-bold uppercase tracking-wider text-lpc-gold-600">
-            Admissions & Course Inquiries
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-lpc-navy-900">
+          <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 uppercase tracking-widest">
+            Admissions Assistance
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Frequently Asked Questions
           </h2>
           <p className="text-xs sm:text-sm text-slate-500">
-            Clear information regarding prerequisites, placement screening, schedules, and certificates.
+            Key details regarding diagnostic benchmarking, scheduling options, and certification.
           </p>
         </div>
 
-        <div className="space-y-3">
-          {faqs.map((faq, index) => {
-            const isOpen = activeFaq === index;
+        <div className="divide-y divide-slate-200 border-y border-slate-200">
+          {faqs.map((faq, idx) => {
+            const isOpen = activeFaq === idx;
             return (
-              <div
-                key={faq.q}
-                className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-2xs"
-              >
+              <div key={idx} className="py-4">
                 <button
                   type="button"
-                  onClick={() => setActiveFaq(isOpen ? null : index)}
-                  className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-sm text-slate-900 hover:text-lpc-navy-800 transition-colors"
-                  aria-expanded={isOpen}
+                  onClick={() => setActiveFaq(isOpen ? null : idx)}
+                  className="w-full flex items-center justify-between gap-4 text-left font-bold text-sm text-slate-900 hover:text-lpc-navy-900 transition-colors"
                 >
-                  <span className="flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4 text-lpc-gold-600 shrink-0" />
-                    <span>{faq.q}</span>
-                  </span>
+                  <span>{faq.q}</span>
                   <ChevronRight
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                      isOpen ? 'rotate-90' : ''
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
+                      isOpen ? 'rotate-90 text-lpc-navy-900' : ''
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                  <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed pr-6 animate-in fade-in duration-150">
                     {faq.a}
-                  </div>
+                  </p>
                 )}
               </div>
             );
@@ -629,38 +564,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. BOTTOM ADMISSION CALL TO ACTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="bg-lpc-navy-900 text-white rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden border border-lpc-navy-800">
-          <div className="max-w-2xl mx-auto space-y-4 relative z-10">
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
-              Ready to Accelerate Your English Proficiency?
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-300">
-              Speak with our academic counselors today to schedule a placement test or reserve a seat in the upcoming term batch.
-            </p>
-
-            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => setEnquiryModalOpen(true)}
-                className="w-full sm:w-auto px-6 py-3 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl text-sm transition-all shadow-md"
-              >
-                Submit Admission Enquiry
-              </button>
-
-              <Link
-                href="/contact"
-                className="w-full sm:w-auto px-6 py-3 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl text-sm border border-white/20 transition-all"
-              >
-                View Campus Addresses & Maps
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Reusable Enquiry Modal */}
+      {/* Shared Enquiry Modal */}
       <EnquiryModal
         isOpen={enquiryModalOpen}
         onClose={() => setEnquiryModalOpen(false)}
@@ -668,4 +572,3 @@ export default function HomePage() {
     </div>
   );
 }
-

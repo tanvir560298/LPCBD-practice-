@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ieltsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#312e81" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="320" fill="url(#ieltsGrad)" />
+  <circle cx="520" cy="240" r="160" fill="#6366f1" opacity="0.15" />
+  <!-- Score Badge -->
+  <g transform="translate(60, 60)">
+    <rect x="0" y="0" width="140" height="130" rx="20" fill="#ffffff" />
+    <text x="70" y="45" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#64748b" text-anchor="middle">TARGET</text>
+    <text x="70" y="90" font-family="system-ui, sans-serif" font-size="44" font-weight="black" fill="#4338ca" text-anchor="middle">8.0</text>
+    <text x="70" y="112" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#10b981" text-anchor="middle">BAND BENCHMARK</text>
+  </g>
+  <!-- 4 Modules Indicator -->
+  <g transform="translate(240, 70)">
+    <rect x="0" y="0" width="280" height="34" rx="8" fill="#3730a3" />
+    <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#e0e7ff">LISTENING</text>
+    <text x="90" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#e0e7ff">READING</text>
+    <text x="160" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#e0e7ff">WRITING</text>
+    <text x="230" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#e0e7ff">SPEAKING</text>
+
+    <rect x="0" y="50" width="280" height="60" rx="12" fill="#ffffff" opacity="0.9" />
+    <text x="20" y="74" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#0f172a">Academic Writing Task 1 &amp; 2</text>
+    <text x="20" y="94" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Weekly Timed Full-Length Mock Exams</text>
+  </g>
+  <rect x="60" y="240" width="220" height="30" rx="8" fill="#4f46e5" opacity="0.3" />
+  <text x="170" y="260" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#c7d2fe" text-anchor="middle">BRITISH / CAMBRIDGE STANDARDS</text>
+</svg>

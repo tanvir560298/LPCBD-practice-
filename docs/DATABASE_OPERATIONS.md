@@ -132,3 +132,4 @@ Prior to any DNS cutover or live data import:
 - [ ] `NEXT_PUBLIC_DEMO_MODE` is explicitly set to `false` in production.
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` is kept exclusively on the server runtime and not exposed in client bundles.
 - [ ] SSL/TLS certificate is active with HSTS enabled.
+

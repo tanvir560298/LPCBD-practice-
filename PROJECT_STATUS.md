@@ -1,9 +1,15 @@
 # Project Status: Language Proficiency Center (LPC), Bangladesh
 
-*Last Updated: 13 November 2026 (Phases 1 through 6 Complete & Verified)*
+*Last Updated: 13 November 2026 (Phases 1 through 6 Complete & Visual Refinements Verified)*
 
 ## 1. Implementation Summary
-- **Phases 1 through 6** are fully implemented, verified, and audited against `handoff/07-REVIEW-CHECKLIST.md`.
+- **Visual Design Refinements (Secondary Reference: `rahmahinternationalschool.com` Adaptation)**:
+  - **Standalone Solid White Navbar**: Completely detached, clean solid white background (`bg-white border-b border-slate-200/90 shadow-xs`), paired with an institutional contact pre-header (`bg-slate-950 text-slate-300`).
+  - **Clear Separation Between Navigation and Hero**: Clean canvas background (`bg-gradient-to-b from-slate-50/90 via-white to-slate-50/40`) establishing generous breathing room and avoiding hero bleeding into header.
+  - **Balanced Text and Authentic Educational Visuals**: 55/45 split between academic program messaging/CTAs and an authentic classroom vector showcase (`public/assets/images/hero-classroom.svg`) with CEFR-aligned and cohort credentials.
+  - **Consistent Alignment and Section Rhythm**: Standardized `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` horizontal bounds and consistent `py-16 sm:py-24` vertical rhythm across all public sections.
+  - **Distinct, Informative Course Cards**: Redesigned course cards on homepage and `/courses` with category color pills, SVG thumbnail artwork (`course-spoken-english.svg`, `course-ielts.svg`, `course-business.svg`, `course-teens.svg`), level badge, duration, hours, branch availability tags, syllabus overview link, and admission enquiry trigger.
+  - **Academic Discipline**: Strictly avoided preschool typography, rainbow palettes, floating decorative cartoon shapes, and single-page navigation. Maintained LPC academic navy (`#0f172a`), warm gold (`#f59e0b`), and clean white surfaces.
 - **Role/Scope Security Engine & Fail-Closed Boundary** ([src/lib/authAdapter.ts](file:///Users/tanvir/Desktop/open%20folder/src/lib/authAdapter.ts)):
   - Strictly distinguishes Teacher (assigned sessions), Branch Coordinator (assigned branch), and Institutional Administrator (global).
   - Production mode (`NEXT_PUBLIC_DEMO_MODE=false`) strictly fails closed (503/401) without verified Supabase backend credentials.
@@ -72,6 +78,12 @@ All 17 original navigation destinations plus administrative and portal workflows
 - **TypeScript Typecheck (`npm run typecheck`):** 0 errors.
 - **Production Build (`npm run build`):** 30 / 30 routes compiled and validated.
 - **Local Server (`http://localhost:3000`):** Active daemon process.
+- **Visual Evidence & Screenshots:**
+  - Desktop Refined Homepage (1280px): [docs/screenshots/refined-homepage-desktop.png](file:///Users/tanvir/Desktop/open%20folder/docs/screenshots/refined-homepage-desktop.png)
+  - Mobile Refined Homepage (390px): [docs/screenshots/refined-homepage-mobile.png](file:///Users/tanvir/Desktop/open%20folder/docs/screenshots/refined-homepage-mobile.png)
+  - Tablet Refined Homepage (768px): [docs/screenshots/refined-homepage-tablet.png](file:///Users/tanvir/Desktop/open%20folder/docs/screenshots/refined-homepage-tablet.png)
+  - Desktop Refined Course Catalog (1280px): [docs/screenshots/refined-courses-desktop.png](file:///Users/tanvir/Desktop/open%20folder/docs/screenshots/refined-courses-desktop.png)
+  - Attendance Workstation: [docs/screenshots/attendance-workstation-desktop.png](file:///Users/tanvir/Desktop/open%20folder/docs/screenshots/attendance-workstation-desktop.png)
 
 ---
 
