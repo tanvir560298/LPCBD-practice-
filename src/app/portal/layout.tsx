@@ -11,10 +11,10 @@ function PortalFrame({children}:{children:React.ReactNode}) {
  const path=usePathname();const {actor,ready,setActor,dirty,setDirty}=usePortal();
  const login=path==='/portal/login';
  const demo=process.env.NEXT_PUBLIC_DEMO_MODE!=='false';
- const links=[{href:'/portal',label:'Today',icon:CalendarDays},{href:'/portal/batches',label:'My batches',icon:Users},{href:'/portal/reports',label:'Reports',icon:BarChart3},...(actor.role!=='teacher'?[{href:'/portal/admin',label:'Administration',icon:Shield}]:[])];
+ const links=[{href:'/portal',label:'Today',icon:CalendarDays},{href:'/portal/batches',label:'My batches',icon:Users},{href:'/portal/events',label:'Programs & Events',icon:CalendarDays},{href:'/portal/reports',label:'Reports',icon:BarChart3},...(actor.role!=='teacher'?[{href:'/portal/admin',label:'Administration',icon:Shield}]:[])];
  return <div className="pt-app" onClickCapture={e=>{
   const anchor=(e.target as HTMLElement).closest('a');
-  if(dirty&&anchor?.getAttribute('href')&&!anchor.getAttribute('href')?.startsWith('#')&&anchor.pathname!==window.location.pathname){if(!window.confirm('Leave this page and discard unsaved attendance changes?')){e.preventDefault();e.stopPropagation();}else{setDirty(false);}}
+  if(dirty&&anchor?.getAttribute('href')&&!anchor.getAttribute('href')?.startsWith('#')&&anchor.pathname!==window.location.pathname){if(!window.confirm('Leave this page and discard unsaved changes?')){e.preventDefault();e.stopPropagation();}else{setDirty(false);}}
  }}>
  <a className="pt-skip" href="#portal-workspace">Skip to workspace</a>
  <header className="pt-header"><div className="pt-header-inner"><Link href="/portal" className="pt-brand"><span><img src="/assets/images/lpc-emblem.png" alt="LPC"/></span><div>LPC <strong>Teacher Portal</strong><small>Language Proficiency Center</small></div></Link>{!login&&<nav aria-label="Teacher portal">{links.map(({href,label,icon:Icon})=><Link key={href} href={href} aria-current={(href==='/portal'?path===href:path.startsWith(href))?'page':undefined}><Icon size={17}/>{label}</Link>)}</nav>}<Link href="/" className="pt-public-link"><Home size={18}/> Home</Link></div></header>
