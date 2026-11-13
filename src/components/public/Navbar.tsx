@@ -17,6 +17,7 @@ import {
   Sparkles,
   ArrowRight,
 } from 'lucide-react';
+import { ProgramNavLink, StudentNav } from './ProgramUpdates';
 import { BrandWordmark } from './BrandWordmark';
 import { EnquiryModal } from './EnquiryModal';
 
@@ -143,13 +144,14 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
+      <div className="bg-slate-50 border-b border-slate-200"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-x-4"><div className="lg:hidden"><ProgramNavLink /></div><div className="ml-auto text-slate-700"><StudentNav /></div></div></div>
       {/* 2. Standalone Solid White Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4" ref={dropdownRef}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2" ref={dropdownRef}>
         {/* Brand Typographic Wordmark */}
         <BrandWordmark size="md" />
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Main Navigation">
+        <nav className="order-3 w-full hidden lg:flex items-center gap-1 xl:gap-2 justify-center" aria-label="Main Navigation">
           <Link
             href="/"
             className={`px-3 py-2 text-sm font-semibold rounded-lg transition-colors ${
@@ -161,6 +163,7 @@ export const Navbar: React.FC = () => {
             Home
           </Link>
 
+          <ProgramNavLink />
           {NAVIGATION_GROUPS.map((group) => {
             const isOpen = activeDropdown === group.label;
             const isGroupActive = group.items.some((item) => pathname === item.href);
@@ -215,7 +218,7 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Action Buttons: Teacher Portal & Admission CTA */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-3 ml-auto">
           {/* Teacher Attendance Portal Access (Professional Navy Badge) */}
           <Link
             href="/portal"
@@ -238,7 +241,7 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Mobile Hamburger Button */}
-        <div className="flex sm:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-2">
           <Link
             href="/portal"
             className="p-2 text-white bg-lpc-navy-900 border border-lpc-navy-800 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center shadow-xs"
@@ -271,6 +274,7 @@ export const Navbar: React.FC = () => {
             Home
           </Link>
 
+          <ProgramNavLink />
           <div className="space-y-3">
             {NAVIGATION_GROUPS.map((group) => (
               <div key={group.label} className="border-b border-slate-100 pb-3">

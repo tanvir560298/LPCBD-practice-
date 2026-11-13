@@ -24,6 +24,7 @@ import {
   Check,
 } from 'lucide-react';
 import { SYNTHETIC_COURSES, SYNTHETIC_BRANCHES } from '@/lib/mockData';
+import { HomeProgramBanner } from '@/components/public/ProgramUpdates';
 import { EnquiryModal } from '@/components/public/EnquiryModal';
 
 const COURSE_IMAGES: Record<string, string> = {
@@ -86,6 +87,7 @@ export default function HomePage() {
             
             {/* Left Column: Academic Proposition & Action (55% width) */}
             <div className="lg:col-span-7 space-y-6 text-left">
+              <HomeProgramBanner />
               {/* Logo Crimson 'C' Accent Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lpc-crimson-950/90 border border-lpc-crimson-500/40 text-lpc-crimson-200 text-xs font-bold tracking-wide shadow-xs">
                 <span className="flex h-2 w-2 relative">

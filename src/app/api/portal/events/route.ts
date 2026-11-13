@@ -4,8 +4,7 @@ import { getAuthenticatedActor } from '@/lib/authAdapter';
 import { ProgramEvent, ProgramError, validateProgram, canReadProgram, canManageProgram, checkProgramConflict, createProgramRoster, validateProgramAttendance, allowedProgramBatches } from '@/lib/programEvents';
 export const dynamic='force-dynamic';
 // Isolated demo storage. A database adapter is required before real institutional use.
-const state=globalThis as typeof globalThis & {lpcDemoPrograms?:Map<string,ProgramEvent>};
-const events=state.lpcDemoPrograms??(state.lpcDemoPrograms=new Map());
+import { programEventStore as events } from '@/lib/programEventStore';
 export async function GET(req:NextRequest){
  const auth=await getAuthenticatedActor(req);
  if(!auth.actor)return NextResponse.json({error:auth.error},{status:auth.statusCode||401});

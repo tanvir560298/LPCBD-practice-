@@ -4,7 +4,7 @@ import { visibleSessions } from './portalView';
 import { getDhakaDateString } from './timeUtils';
 
 export const programTypes = ['Debate', 'Impromptu Speech', 'Presentation', 'Quiz', 'Other'] as const;
-export type ProgramInput = { title: string; type: string; date: string; start: string; end: string; venue: string; instructions: string; batchIds: string[] };
+export type ProgramInput = { title: string; type: string; date: string; start: string; end: string; venue: string; instructions: string; batchIds: string[]; public: boolean };
 export type ProgramEvent = ProgramInput & { id: string; ownerId: string; ownerName: string; version: number; cancelled: boolean; cancellationReason?: string; roster: {id:string; fullName:string; studentCode:string}[]; attendance: Record<string, AttendanceStatus>; submitted: boolean; updatedAt: string };
 export class ProgramError extends Error { constructor(message:string, public status=422){super(message);} }
 export function allowedProgramBatches(actor:AuthenticatedActor) {
@@ -30,7 +30,8 @@ export function validateProgram(input:unknown,actor:AuthenticatedActor):ProgramI
   if(!Array.isArray(data.batchIds)||!data.batchIds.length||data.batchIds.some(id=>typeof id!=='string'))throw new ProgramError('Choose at least one batch.');
   const batchIds=Array.from(new Set(data.batchIds as string[])),allowed=allowedProgramBatches(actor).map(b=>b.id);
   if(actor.accountStatus!=='active'||batchIds.some(id=>!allowed.includes(id)))throw new ProgramError('You can only schedule programs for your assigned batches.',403);
-  return {title,type,date,start,end,venue,instructions,batchIds};
+  if(data.public!==undefined&&typeof data.public!=='boolean')throw new ProgramError('Choose whether this program is public.');
+  return {title,type,date,start,end,venue,instructions,batchIds,public:data.public===true};
 }
 export function createProgramRoster(batchIds:string[]) {
   return SYNTHETIC_STUDENTS.filter(s=>s.active&&SYNTHETIC_ENROLLMENTS.some(e=>e.studentId===s.id&&e.status==='active'&&batchIds.includes(e.batchId))).map(({id,fullName,studentCode})=>({id,fullName,studentCode}));

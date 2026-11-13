@@ -17,3 +17,5 @@
 @media(max-width:480px){.pt-event-attendee{align-items:stretch;flex-direction:column}.pt-event-attendee select{width:100%}.pt-event-times{grid-template-columns:1fr}.pt-calendar-grid{gap:2px}.pt-calendar-weekday{font-size:11px}.pt-event-calendar>.pt-section-heading{gap:8px;align-items:center;flex-wrap:nowrap}.pt-event-calendar h2{font-size:17px}.pt-calendar-day button{font-size:10px}.pt-calendar-day button span{font-size:9px}}
 
 .pt-calendar-full-date{display:none}@media(max-width:600px){.pt-calendar-grid{grid-template-columns:1fr;gap:12px}.pt-calendar-weekday,.pt-calendar-padding,.pt-calendar-empty,.pt-calendar-number{display:none}.pt-calendar-full-date{display:inline;font-weight:650}.pt-calendar-day{padding:12px;min-height:0}.pt-calendar-day button{font-size:16px;padding:12px;min-height:54px}.pt-calendar-day button span{font-size:14px}}
+
+.pt-event-public{flex-direction:row!important;align-items:start;gap:12px!important}.pt-event-public input{width:22px!important;min-height:22px!important;height:22px;flex-shrink:0;margin-top:4px}.pt-event-public small{display:block}
