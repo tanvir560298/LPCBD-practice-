@@ -1,14 +1,12 @@
 # Project Status: Language Proficiency Center (LPC), Bangladesh
 
-*Last Updated: 13 November 2026 (Phase 1 & Phase 2 Active)*
+*Last Updated: 13 November 2026 (Phase 1, 2 & Functional Attendance Spec Active)*
 
 ## 1. Implementation Summary
-- **Phase 1: Design Prototype** and **Phase 2: Public Content, IA & Workflows** are complete and verified.
-- Decoupled public portal and faculty workstation running on Next.js 14 App Router, TypeScript, and Tailwind CSS.
-- Real `/api/enquiry` server endpoint implemented with field-specific validations, tracking codes (`ENQ-...`), and integration into both `EnquiryModal` and `/contact`.
-- Explicit legacy 301/308 redirects implemented in `next.config.js` and verified.
-- SEO dynamic XML sitemap (`/sitemap.xml`) and search bot exclusion rules (`/robots.txt` blocking `/portal` and `/api`) active.
-- Added `/portal/batches/[id]` route displaying full cohort session timeline and active student roster.
+- **Phase 1 (Design Prototype)**, **Phase 2 (Content & Workflows)**, and **Phase 4 (Functional Attendance Specification - `04-ATTENDANCE-SPEC.md`)** are fully implemented and verified.
+- Dedicated Server Attendance Engine ([src/lib/attendanceStore.ts](file:///Users/tanvir/Desktop/open%20folder/src/lib/attendanceStore.ts)) with optimistic concurrency revision tracking (`version`), atomic submit lock, and immutable audit logging.
+- Complete API route handlers ([/api/portal/sessions/[id]/attendance](file:///Users/tanvir/Desktop/open%20folder/src/app/api/portal/sessions/[id]/attendance/route.ts)) for GET (sheet + roster), POST (draft save with 409 conflict detection), PUT (final submission with 422 unmarked block), and PATCH (authorized correction request).
+- Compliance and reporting enhancements: Missing Attendance Sessions monitor, per-student history timeline, and administrative CSV student roster validation preview ([/portal/admin/import](file:///Users/tanvir/Desktop/open%20folder/src/app/portal/admin/import/page.tsx)).
 
 ## 2. Route & Architecture Directory
 All 17 original navigation destinations plus portal workflows are live:
@@ -31,46 +29,22 @@ All 17 original navigation destinations plus portal workflows are live:
 - `/sitemap.xml`: Dynamic XML sitemap listing public pages and active course URLs.
 - `/robots.txt`: Search crawler directives allowing public pages and explicitly disallowing `/portal/` and `/api/`.
 - `/api/enquiry`: Live POST handler with input validation, error mapping, and reference generation.
+- `/api/portal/sessions/[id]/attendance`: Attendance endpoint supporting draft saves, atomic submission locks, optimistic concurrency checks, and correction requests.
 - `/portal`: Dedicated Faculty Attendance Dashboard (Today's Scheduled Sessions in Asia/Dhaka time).
 - `/portal/batches`: Assigned Batches overview.
 - `/portal/batches/[id]`: Detailed cohort schedule, session timeline, and enrolled roster.
 - `/portal/sessions/[id]/attendance`: Interactive Attendance Workstation (Unmarked default, 5-status toggles, bulk present protection, save draft, submit lock, and correction request).
-- `/portal/reports`: Scoped Attendance Reports with raw counts, provisional percentage, and formula-safe CSV export.
+- `/portal/reports`: Scoped Attendance Reports with raw counts, provisional percentage, missing attendance monitor, and formula-safe CSV export.
+- `/portal/admin/import`: Administrative CSV student roster preview and row-level error validation.
 - `/portal/login`: Faculty Demo Login.
 
-## 3. Legacy Redirects Inventory
-- `/about-us` -> `/about` (308 Permanent)
-- `/board-of-directors` -> `/about/leadership` (308 Permanent)
-- `/course` -> `/courses` (308 Permanent)
-- `/product/:slug*` -> `/courses` (308 Permanent)
-- `/access-program-bangladesh` -> `/programs/access` (308 Permanent)
-- `/success-story` -> `/community/stories` (308 Permanent)
-- `/contact-us` -> `/contact` (308 Permanent)
-- `/l-p-c-school` -> `/schools` (308 Permanent)
-- `/l-p-c-school/lpc-laboratory-school-college-dhaka` -> `/schools/dhaka` (308 Permanent)
-- `/l-p-c-school/lpc-laboratory-school-college-rajshahi` -> `/schools/rajshahi` (308 Permanent)
-
-## 4. Content Verification Register (08-CONTENT-VERIFICATION.md Tracking)
-| Area / Page | Current Source | Status | Action Required from LPC Owner |
-|---|---|---|---|
-| Official Brand Logo | Typographic crest wordmark | Provisional | Provide official vector logo assets (.svg / .eps) |
-| Board of Directors | Institutional governance shell | Pending | Re-verify current active trustees and bios |
-| Faculty Profiles | Synthetic educator profiles | Prototype | Provide confirmed teacher roster & media consent |
-| Laboratory Schools | Dhaka & Rajshahi campus shells | Pending | Confirm academic term calendars and NCTB streams |
-| Branch Addresses | 4 centers (Dhaka, CTG, Rajshahi, CXB)| Legacy info | Confirm operational status and helpdesk numbers |
-| Tuition Fees | Disclaimed provisional notes | Disclaimed | Provide official fee schedule and scholarship waivers |
-| Attendance Policy | Documented provisional formula | Provisional | Confirm institutional threshold and late penalty policy |
-
-## 5. Automated Tests & Quality Evidence
-- **Vitest Suite (17 tests across 4 files):**
-  - `tests/attendance.test.ts` (8 tests): Dhaka time, multi-session keying, unmarked default, bulk overwrite protection, submission lock, CSV sanitization.
-  - `tests/navigation.test.ts` (2 tests): All 17 destinations mapped, duplicate menu consolidated.
+## 3. Automated Tests & Quality Evidence
+- **Vitest Suite (24 tests across 5 files):**
+  - `tests/attendance-concurrency.test.ts` (7 tests): Unmarked initialization, draft version increment, 409 conflict detection, 422 unmarked submission block, atomic sheet lock, immutable audit logging, and correction request flow.
+  - `tests/attendance.test.ts` (8 tests): Dhaka time, multi-session keying, bulk overwrite protection, CSV formula sanitization.
   - `tests/enquiry.test.ts` (4 tests): Validation rejection, email formatting, tracking code generation, admin read.
   - `tests/redirects.test.ts` (3 tests): 301 legacy redirects, no blanket redirect to home.
+  - `tests/navigation.test.ts` (2 tests): All 17 destinations mapped, duplicate menu consolidated.
 - **TypeScript Typecheck (`npm run typecheck`):** 0 errors.
-- **Production Build (`npm run build`):** 25/25 routes compiled and validated.
-
-## 6. Next Steps (Phase 3)
-- Supabase Auth integration for Teacher, Coordinator, and Admin identities.
-- Row-Level Security verification against unauthorized cross-batch and cross-branch requests.
-- Admin portal for cohort creation, student enrollment, and teacher assignments.
+- **Production Build (`npm run build`):** 26/26 routes compiled and validated.
+- **Local Server (`http://localhost:3000`):** Active and running.

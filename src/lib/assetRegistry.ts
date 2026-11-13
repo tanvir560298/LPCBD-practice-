@@ -72,3 +72,4 @@ export const ASSET_REGISTRY: Record<string, TrackedAsset> = {
     notes: 'Awaiting high-resolution campus exterior photos from Dhaka school office.',
   },
 };
+
