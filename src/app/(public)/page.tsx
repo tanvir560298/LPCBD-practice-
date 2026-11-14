@@ -84,7 +84,7 @@ export default function HomePage() {
         <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-lpc-gold-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
             
             {/* Left Column: Academic Proposition & Action (55% width) */}
             <div className="lg:col-span-7 space-y-6 text-left">
@@ -148,33 +148,34 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right Column: Balanced Classroom Photography with Tri-Color Frame */}
-            <div className="lg:col-span-5 relative">
+            {/* Right Column: Balanced Classroom Photography & Accreditation Badges */}
+            <div className="lg:col-span-5 space-y-4">
               <div className="relative mx-auto max-w-lg lg:max-w-none">
                 {/* Visual Classroom Frame with subtle border & Auto-scrolling carousel */}
                 <div className="rounded-2xl border-2 border-slate-700/80 shadow-2xl bg-slate-900/80 p-2.5 overflow-hidden backdrop-blur-xs">
                   <HeroPhotoCarousel />
                 </div>
+              </div>
 
-                {/* Floating Badge 1: Top Right */}
-                <div className="absolute -top-4 -right-4 bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white rounded-xl px-3.5 py-2 shadow-xl hidden sm:flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-lpc-gold-500/20 text-lpc-gold-400 flex items-center justify-center font-bold text-xs">
+              {/* Badges placed cleanly BELOW the photo */}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="bg-slate-900/90 border border-slate-700/80 text-white rounded-xl px-3.5 py-2.5 shadow-md flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-lpc-gold-500/20 text-lpc-gold-400 flex items-center justify-center font-bold text-xs shrink-0">
                     <Award className="w-4 h-4" />
                   </div>
-                  <div className="text-left">
-                    <div className="text-xs font-bold text-white">CEFR Certified</div>
-                    <div className="text-[10px] text-slate-400">Curriculum Standards A1–C1</div>
+                  <div className="text-left min-w-0">
+                    <div className="text-xs font-bold text-white truncate">CEFR Certified</div>
+                    <div className="text-[10px] text-slate-400 truncate">Curriculum A1–C1</div>
                   </div>
                 </div>
 
-                {/* Floating Badge 2: Bottom Left */}
-                <div className="absolute -bottom-4 -left-4 bg-slate-900/95 backdrop-blur-md border border-slate-700 text-white rounded-xl px-3.5 py-2.5 shadow-xl hidden sm:flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-lpc-crimson-600/25 text-lpc-crimson-300 flex items-center justify-center font-bold text-xs">
+                <div className="bg-slate-900/90 border border-slate-700/80 text-white rounded-xl px-3.5 py-2.5 shadow-md flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-lpc-crimson-600/25 text-lpc-crimson-300 flex items-center justify-center font-bold text-xs shrink-0">
                     <Users className="w-4 h-4" />
                   </div>
-                  <div className="text-left">
-                    <div className="text-xs font-bold text-white">Active Speaking Labs</div>
-                    <div className="text-[10px] text-slate-400">15–20 Students per Cohort</div>
+                  <div className="text-left min-w-0">
+                    <div className="text-xs font-bold text-white truncate">Speaking Labs</div>
+                    <div className="text-[10px] text-slate-400 truncate">15–20 per Cohort</div>
                   </div>
                 </div>
               </div>
