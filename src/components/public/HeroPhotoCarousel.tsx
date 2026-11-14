@@ -29,6 +29,14 @@ export const SHOWCASE_SLIDES: ShowcaseSlide[] = [
     caption: 'Classroom Projects & Peer Collaboration',
     subcaption: 'Small-cohort engagement fostering expressive fluency and teamwork',
   },
+  {
+    id: 'slide-3',
+    src: '/assets/images/showcase/lpc-activity-3.jpg',
+    alt: 'LPC Multimedia Language Lab - Syed Nazrul Ahsan conducting an English Access technology session',
+    tag: 'Multimedia Language Lab',
+    caption: 'Multimedia Lectures & Digital Literacy',
+    subcaption: 'Coordinator Syed Nazrul Ahsan conducting Access session with projection drills',
+  },
 ];
 
 interface HeroPhotoCarouselProps {
@@ -158,3 +166,4 @@ export function HeroPhotoCarousel({
     </div>
   );
 }
+

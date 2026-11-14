@@ -31,7 +31,7 @@ import { HeroPhotoCarousel } from '@/components/public/HeroPhotoCarousel';
 const COURSE_IMAGES: Record<string, string> = {
   'spoken-english': '/assets/images/showcase/lpc-activity-2.jpg',
   'ielts-preparation': '/assets/images/course-ielts.svg',
-  'english-for-professionals': '/assets/images/course-business.svg',
+  'english-for-professionals': '/assets/images/showcase/lpc-activity-3.jpg',
   'english-for-teens': '/assets/images/course-teens.svg',
 };
 

@@ -95,6 +95,55 @@ export default function AccessProgramPage() {
         </div>
       </div>
 
+      {/* Classroom Environment & Hands-on Workshops */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+          <div className="relative aspect-[16/10] bg-slate-900 overflow-hidden">
+            <img
+              src="/assets/images/showcase/lpc-activity-3.jpg"
+              alt="LPC Multimedia Language Lab and Technology Sessions"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute top-3 left-3">
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
+                Multimedia Lab
+              </span>
+            </div>
+          </div>
+          <div className="p-5 space-y-1.5">
+            <h3 className="text-sm font-bold text-slate-900">
+              Interactive Multimedia Lectures &amp; Digital Drills
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Equipped with computer workstations, overhead projection, and digital language labs to enhance auditory comprehension and presentation delivery.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+          <div className="relative aspect-[16/10] bg-slate-900 overflow-hidden">
+            <img
+              src="/assets/images/showcase/lpc-activity-2.jpg"
+              alt="LPC Collaborative Student Projects & Communicative Workshops"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute top-3 left-3">
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-lpc-gold-300 border border-lpc-gold-500/40 text-[10px] font-bold">
+                Collaborative Workshop
+              </span>
+            </div>
+          </div>
+          <div className="p-5 space-y-1.5">
+            <h3 className="text-sm font-bold text-slate-900">
+              Creative Poster Presentation &amp; Peer Learning
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Scholars work in small teams on environmental awareness, civic responsibility, and cultural topics, practicing spontaneous spoken dialogue.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Program Leadership & Coordination */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md">
         <div className="flex flex-col sm:flex-row items-center gap-6">
