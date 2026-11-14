@@ -31,6 +31,26 @@ export default function AccessProgramPage() {
         </p>
       </div>
 
+      {/* Featured Cohort Photograph */}
+      <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-slate-900 group">
+        <img
+          src="/assets/images/showcase/lpc-activity-1.jpg"
+          alt="English Access Microscholarship Program - Student Cohort & Leadership Celebration"
+          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex flex-col justify-end p-6 sm:p-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lpc-gold-400 text-slate-950 text-xs font-bold w-fit mb-2 shadow-xs">
+            <span>Official Access Cohort Celebration</span>
+          </div>
+          <h2 className="text-lg sm:text-2xl font-extrabold text-white">
+            Empowering Youth Through Communicative Fluency &amp; Civic Leadership
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1">
+            Access scholars, LPC instructors, and distinguished guests celebrating graduation and completion of intensive English language modules.
+          </p>
+        </div>
+      </div>
+
       {/* Distinction Alert: Scholarship vs Paid Courses */}
       <div className="p-5 bg-lpc-navy-50 border border-lpc-navy-200 rounded-2xl flex items-start gap-3.5 text-xs text-lpc-navy-900">
         <HeartHandshake className="w-5 h-5 text-lpc-navy-700 shrink-0 mt-0.5" />

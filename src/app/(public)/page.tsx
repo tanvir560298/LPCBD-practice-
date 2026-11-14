@@ -154,8 +154,8 @@ export default function HomePage() {
                 <div className="rounded-2xl border-2 border-slate-700/80 shadow-2xl bg-slate-900/80 p-2.5 overflow-hidden backdrop-blur-xs">
                   <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-800">
                     <img
-                      src="/assets/images/hero-classroom.svg"
-                      alt="LPC interactive communicative language seminar classroom"
+                      src="/assets/images/showcase/lpc-activity-1.jpg"
+                      alt="LPC English Access Microscholarship & interactive communicative seminar cohort"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -406,26 +406,44 @@ export default function HomePage() {
       {/* 4. ENGLISH ACCESS MICROSCHOLARSHIP HIGHLIGHT */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-r from-lpc-navy-950 via-lpc-navy-900 to-lpc-navy-800 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
-          <div className="relative z-10 max-w-2xl space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lpc-gold-400/20 border border-lpc-gold-400/40 text-lpc-gold-300 text-xs font-bold">
-              <span>National Impact Initiative</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 space-y-5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lpc-gold-400/20 border border-lpc-gold-400/40 text-lpc-gold-300 text-xs font-bold">
+                <span>National Impact Initiative</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+                English Access Microscholarship Program
+              </h2>
+              <p className="text-sm text-slate-300 leading-relaxed">
+                For over a decade, LPC has administered the flagship English Access Program in Bangladesh. Providing foundational English language skills, digital literacy, and leadership training to talented youth from underserved communities.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <Link
+                  href="/programs/access"
+                  className="px-5 py-2.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center gap-2"
+                >
+                  <span>Read Access Program Report</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <div className="text-xs text-slate-400 flex items-center">
+                  <span>Merit-based scholarship selection • 2-Year Program</span>
+                </div>
+              </div>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-              English Access Microscholarship Program
-            </h2>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              For over a decade, LPC has administered the flagship English Access Program in Bangladesh. Providing foundational English language skills, digital literacy, and leadership training to talented youth from underserved communities.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/programs/access"
-                className="px-5 py-2.5 bg-lpc-gold-400 hover:bg-lpc-gold-500 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all flex items-center gap-2"
-              >
-                <span>Read Access Program Report</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <div className="text-xs text-slate-400 flex items-center">
-                <span>Merit-based scholarship selection • 2-Year Program</span>
+
+            <div className="lg:col-span-5">
+              <div className="relative rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl aspect-[4/3] group bg-slate-900">
+                <img
+                  src="/assets/images/showcase/lpc-activity-1.jpg"
+                  alt="LPC English Access Microscholarship Program - Student Cohort & Leadership Celebration"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent flex items-end p-4">
+                  <div className="text-xs text-slate-200 font-semibold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                    <span>English Access Scholars &amp; Leadership Cohort</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
