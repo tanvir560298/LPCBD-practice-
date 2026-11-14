@@ -41,53 +41,104 @@ export default function LeadershipPage() {
         </p>
       </div>
 
-      {/* Chairman Featured Profile */}
-      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-          <div className="relative shrink-0 mx-auto md:mx-0">
-            <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden ring-4 ring-lpc-gold-400 ring-offset-4 ring-offset-white shadow-xl bg-slate-100 p-1">
-              <img
-                src="/assets/images/leadership/javed-hyder-kareem.jpg"
-                alt="Javed Hyder Kareem, Chairman of LPC Board of Directors"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </div>
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3.5 py-1 bg-lpc-navy-950 text-lpc-gold-400 text-[11px] font-bold rounded-full border border-lpc-gold-500/60 shadow-md uppercase tracking-wider whitespace-nowrap">
-              Chairman
-            </div>
-          </div>
-
-          <div className="space-y-4 text-center md:text-left flex-1">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-lpc-gold-50 text-lpc-gold-900 border border-lpc-gold-200 rounded-full text-xs font-bold mb-2">
-                <Award className="w-3.5 h-3.5 text-lpc-gold-600" />
-                <span>Executive Leadership</span>
+      {/* Executive Directorate Grid */}
+      <div className="space-y-8">
+        {/* 1. Chairman Profile */}
+        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div className="relative shrink-0 mx-auto md:mx-0">
+              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden ring-4 ring-lpc-gold-400 ring-offset-4 ring-offset-white shadow-xl bg-slate-100 p-1">
+                <img
+                  src="/assets/images/leadership/javed-hyder-kareem.jpg"
+                  alt="Javed Hyder Kareem, Chairman of LPC Board of Directors"
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                Javed Hyder Kareem
-              </h2>
-              <div className="text-sm font-semibold text-lpc-navy-800 mt-0.5">
-                Chairman, Board of Directors • Language Proficiency Center Ltd.
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3.5 py-1 bg-lpc-navy-950 text-lpc-gold-400 text-[11px] font-bold rounded-full border border-lpc-gold-500/60 shadow-md uppercase tracking-wider whitespace-nowrap">
+                Chairman
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl">
-              Providing visionary stewardship and executive oversight for Language Proficiency Center (LPC) Bangladesh. Under the guidance of Chairman Javed Hyder Kareem, the Board of Directors steers institutional expansion, curriculum modernization, and strategic capacity-building initiatives across Dhaka, Chattogram, Rajshahi, and Cox&apos;s Bazar.
-            </p>
+            <div className="space-y-4 text-center md:text-left flex-1">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-lpc-gold-50 text-lpc-gold-900 border border-lpc-gold-200 rounded-full text-xs font-bold mb-2">
+                  <Award className="w-3.5 h-3.5 text-lpc-gold-600" />
+                  <span>Executive Governance</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                  Javed Hyder Kareem
+                </h2>
+                <div className="text-sm font-semibold text-lpc-navy-800 mt-0.5">
+                  Chairman, Board of Directors • Language Proficiency Center Ltd.
+                </div>
+              </div>
 
-            <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-500">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Executive Governance</span>
-              </span>
-              <span>•</span>
-              <span>Institutional Policy Oversight</span>
-              <span>•</span>
-              <span>Bilateral Partnerships</span>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl">
+                Providing visionary stewardship and executive governance for Language Proficiency Center (LPC) Bangladesh. Under the guidance of Chairman Javed Hyder Kareem, the Board of Directors steers institutional expansion, curriculum modernization, and strategic capacity-building initiatives across Dhaka, Chattogram, Rajshahi, and Cox&apos;s Bazar.
+              </p>
+
+              <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Strategic Leadership</span>
+                </span>
+                <span>•</span>
+                <span>Institutional Governance</span>
+                <span>•</span>
+                <span>Bilateral Partnerships</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* 2. Managing Director Profile */}
+        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div className="relative shrink-0 mx-auto md:mx-0">
+              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden ring-4 ring-lpc-gold-400 ring-offset-4 ring-offset-white shadow-xl bg-slate-100 p-1">
+                <img
+                  src="/assets/images/leadership/yasmeen-karim.jpg"
+                  alt="Yasmeen Karim, Managing Director of Language Proficiency Center"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3.5 py-1 bg-lpc-navy-950 text-lpc-gold-400 text-[11px] font-bold rounded-full border border-lpc-gold-500/60 shadow-md uppercase tracking-wider whitespace-nowrap">
+                Managing Director
+              </div>
+            </div>
+
+            <div className="space-y-4 text-center md:text-left flex-1">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-lpc-navy-50 text-lpc-navy-900 border border-lpc-navy-200 rounded-full text-xs font-bold mb-2">
+                  <Award className="w-3.5 h-3.5 text-lpc-gold-600" />
+                  <span>Executive Directorate</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                  Yasmeen Karim
+                </h2>
+                <div className="text-sm font-semibold text-lpc-navy-800 mt-0.5">
+                  Managing Director • Language Proficiency Center Ltd.
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl">
+                Leading academic operations, educational programming, and institutional development across all regional branches of Language Proficiency Center (LPC). Oversees teacher training standards, curriculum implementation, and student welfare initiatives to ensure premier English language education in Bangladesh.
+              </p>
+
+              <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Academic Direction</span>
+                </span>
+                <span>•</span>
+                <span>Campus Operations</span>
+                <span>•</span>
+                <span>Faculty Development</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* Governance Framework Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
