@@ -26,9 +26,10 @@ import {
 import { SYNTHETIC_COURSES, SYNTHETIC_BRANCHES } from '@/lib/mockData';
 import { HomeProgramBanner } from '@/components/public/ProgramUpdates';
 import { EnquiryModal } from '@/components/public/EnquiryModal';
+import { HeroPhotoCarousel } from '@/components/public/HeroPhotoCarousel';
 
 const COURSE_IMAGES: Record<string, string> = {
-  'spoken-english': '/assets/images/course-spoken-english.svg',
+  'spoken-english': '/assets/images/showcase/lpc-activity-2.jpg',
   'ielts-preparation': '/assets/images/course-ielts.svg',
   'english-for-professionals': '/assets/images/course-business.svg',
   'english-for-teens': '/assets/images/course-teens.svg',
@@ -150,15 +151,9 @@ export default function HomePage() {
             {/* Right Column: Balanced Classroom Photography with Tri-Color Frame */}
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-lg lg:max-w-none">
-                {/* Visual Classroom Frame with subtle border */}
+                {/* Visual Classroom Frame with subtle border & Auto-scrolling carousel */}
                 <div className="rounded-2xl border-2 border-slate-700/80 shadow-2xl bg-slate-900/80 p-2.5 overflow-hidden backdrop-blur-xs">
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-800">
-                    <img
-                      src="/assets/images/showcase/lpc-activity-1.jpg"
-                      alt="LPC English Access Microscholarship & interactive communicative seminar cohort"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <HeroPhotoCarousel />
                 </div>
 
                 {/* Floating Badge 1: Top Right */}

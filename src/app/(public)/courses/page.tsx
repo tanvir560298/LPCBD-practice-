@@ -17,7 +17,7 @@ import { SYNTHETIC_COURSES, SYNTHETIC_BRANCHES } from '@/lib/mockData';
 import { EnquiryModal } from '@/components/public/EnquiryModal';
 
 const COURSE_IMAGES: Record<string, string> = {
-  'spoken-english': '/assets/images/course-spoken-english.svg',
+  'spoken-english': '/assets/images/showcase/lpc-activity-2.jpg',
   'ielts-preparation': '/assets/images/course-ielts.svg',
   'english-for-professionals': '/assets/images/course-business.svg',
   'english-for-teens': '/assets/images/course-teens.svg',
