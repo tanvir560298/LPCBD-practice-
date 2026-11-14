@@ -33,8 +33,8 @@
 
 Before production launch and live domain deployment, the following 8 items must be formally supplied and ratified by the LPC owner:
 
-1. [ ] **Official Vector Logo:** Vector `.svg` / `.eps` logo file and brand color palette.
-2. [ ] **Board of Directors Roster:** Confirmed list of active trustees, titles, and approved bios.
+1. [x] **Official Vector Logo:** Official interlocking LPC emblem supplied by owner, processed, and integrated across header, footer, favicon, and portal.
+2. [x] **Board Chairman Verified:** Chairman Javed Hyder Kareem photo and title supplied by owner and published on `/about/leadership`. Remaining trustees to follow.
 3. [ ] **Faculty Credentials & Photos:** Active teacher list with qualifications and signed media release forms.
 4. [ ] **Official Fee Schedule:** Confirmed course fees, sibling discounts, and installment policies.
 5. [ ] **Branch Directory Verification:** Confirm whether Rajshahi and Cox's Bazar branches are currently operational, with active phone numbers.

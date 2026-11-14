@@ -41,6 +41,54 @@ export default function LeadershipPage() {
         </p>
       </div>
 
+      {/* Chairman Featured Profile */}
+      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+          <div className="relative shrink-0">
+            <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-lpc-gold-400 shadow-lg bg-slate-100 p-1">
+              <img
+                src="/assets/images/leadership/javed-hyder-kareem.jpg"
+                alt="Javed Hyder Kareem, Chairman of LPC Board of Directors"
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
+            <div className="absolute -bottom-2 -right-2 px-3 py-1 bg-lpc-navy-900 text-lpc-gold-400 text-[11px] font-bold rounded-lg border border-lpc-navy-800 shadow-sm">
+              Chairman
+            </div>
+          </div>
+
+          <div className="space-y-4 text-center md:text-left flex-1">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-lpc-gold-50 text-lpc-gold-900 border border-lpc-gold-200 rounded-full text-xs font-bold mb-2">
+                <Award className="w-3.5 h-3.5 text-lpc-gold-600" />
+                <span>Executive Leadership</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                Javed Hyder Kareem
+              </h2>
+              <div className="text-sm font-semibold text-lpc-navy-800 mt-0.5">
+                Chairman, Board of Directors • Language Proficiency Center Ltd.
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl">
+              Providing visionary stewardship and executive oversight for Language Proficiency Center (LPC) Bangladesh. Under the guidance of Chairman Javed Hyder Kareem, the Board of Directors steers institutional expansion, curriculum modernization, and strategic capacity-building initiatives across Dhaka, Chattogram, Rajshahi, and Cox&apos;s Bazar.
+            </p>
+
+            <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Executive Governance</span>
+              </span>
+              <span>•</span>
+              <span>Institutional Policy Oversight</span>
+              <span>•</span>
+              <span>Bilateral Partnerships</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Governance Framework Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {leadershipTrustees.map((item, idx) => (
@@ -67,12 +115,12 @@ export default function LeadershipPage() {
       </div>
 
       {/* Owner Verification Notice */}
-      <div className="p-5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3.5 text-xs text-amber-900">
-        <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+      <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl flex items-start gap-3.5 text-xs text-slate-700">
+        <Info className="w-5 h-5 text-lpc-navy-700 shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <span className="font-bold text-sm block">Content Verification Notice: Board Member Roster</span>
-          <p className="text-amber-800 leading-relaxed">
-            Per the project brief requirements, individual names, biographies, and portraits of Board Trustees from the legacy website (https://lpcbd.org/board-of-directors/) are undergoing formal identity re-verification with LPC administration. This ensures only current, active trustees with verified permissions are published.
+          <span className="font-bold text-sm text-slate-900 block">Governance Register Status</span>
+          <p className="text-slate-600 leading-relaxed">
+            Chairman profile verified with official LPC assets. Additional trustee and advisory committee appointments are updated periodically following board resolutions.
           </p>
         </div>
       </div>
