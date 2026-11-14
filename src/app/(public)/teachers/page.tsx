@@ -31,6 +31,47 @@ export default function TeachersPage() {
         </p>
       </div>
 
+      {/* Featured Lead Coordinator */}
+      <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm flex flex-col md:flex-row items-center gap-6">
+        <div className="relative shrink-0">
+          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-4 ring-emerald-500/80 ring-offset-4 ring-offset-white shadow-lg bg-slate-100 p-0.5">
+            <img
+              src="/assets/images/leadership/syed-nazrul-ahsan.jpg"
+              alt="Syed Nazrul Ahsan, Academic and Program Coordinator"
+              className="w-full h-full object-cover rounded-full"
+            />
+          </div>
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 bg-slate-900 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-500/60 shadow-xs uppercase tracking-wider whitespace-nowrap">
+            Coordinator
+          </div>
+        </div>
+
+        <div className="space-y-2 text-center md:text-left flex-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-full text-xs font-bold">
+            <Award className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Academic Leadership</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+            Syed Nazrul Ahsan
+          </h2>
+          <div className="text-xs sm:text-sm font-semibold text-lpc-navy-800">
+            Academic & Program Coordinator • English Access Program Facilitator
+          </div>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl">
+            Coordinating curriculum standards, teacher training, and intensive student learning workshops across LPC branches and the English Access Microscholarship Program.
+          </p>
+        </div>
+
+        <div className="shrink-0">
+          <Link
+            href="/about/leadership"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-lpc-navy-50 text-lpc-navy-900 rounded-xl text-xs font-bold hover:bg-lpc-navy-100 transition-colors border border-lpc-navy-200"
+          >
+            <span>Governance & Board &rarr;</span>
+          </Link>
+        </div>
+      </div>
+
       {/* Teachers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {SYNTHETIC_TEACHERS.map((teacher) => {
