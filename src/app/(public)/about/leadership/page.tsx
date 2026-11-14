@@ -44,15 +44,15 @@ export default function LeadershipPage() {
       {/* Chairman Featured Profile */}
       <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-          <div className="relative shrink-0">
-            <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-lpc-gold-400 shadow-lg bg-slate-100 p-1">
+          <div className="relative shrink-0 mx-auto md:mx-0">
+            <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden ring-4 ring-lpc-gold-400 ring-offset-4 ring-offset-white shadow-xl bg-slate-100 p-1">
               <img
                 src="/assets/images/leadership/javed-hyder-kareem.jpg"
                 alt="Javed Hyder Kareem, Chairman of LPC Board of Directors"
-                className="w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-cover rounded-full"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 px-3 py-1 bg-lpc-navy-900 text-lpc-gold-400 text-[11px] font-bold rounded-lg border border-lpc-navy-800 shadow-sm">
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3.5 py-1 bg-lpc-navy-950 text-lpc-gold-400 text-[11px] font-bold rounded-full border border-lpc-gold-500/60 shadow-md uppercase tracking-wider whitespace-nowrap">
               Chairman
             </div>
           </div>
