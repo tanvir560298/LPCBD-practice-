@@ -4,17 +4,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  GraduationCap,
   Lock,
-  Shield,
-  Code2,
-  Building,
   ArrowRight,
   ShieldAlert,
-  UserCheck,
+  Loader2,
   CheckCircle2,
+  AlertCircle,
   Sparkles,
-  Users,
 } from 'lucide-react';
 import { useProgramUpdates } from '@/components/public/ProgramUpdates';
 import {
@@ -22,355 +18,206 @@ import {
   SYNTHETIC_STUDENTS,
 } from '@/lib/mockData';
 
-type LoginRole = 'teacher' | 'student' | 'admin' | 'developer';
+// Combined unified user directory
+interface UnifiedUser {
+  id: string;
+  name: string;
+  identifier: string; // email or student code
+  role: 'teacher' | 'student' | 'admin' | 'coordinator' | 'developer';
+  roleDisplay: string;
+  targetDashboard: string;
+  isStudent: boolean;
+}
+
+const ALL_ACCOUNTS: UnifiedUser[] = [
+  ...SYNTHETIC_USERS.filter((u) => u.accountStatus === 'active').map((u) => ({
+    id: u.id,
+    name: u.fullName,
+    identifier: u.email,
+    role: u.role as UnifiedUser['role'],
+    roleDisplay:
+      u.role === 'admin'
+        ? 'Institutional Administrator'
+        : u.role === 'coordinator'
+        ? 'Branch Coordinator'
+        : u.role === 'developer'
+        ? 'Lead Web Developer'
+        : 'Faculty Instructor',
+    targetDashboard:
+      u.role === 'admin'
+        ? '/portal/admin'
+        : u.role === 'developer'
+        ? '/portal/developer'
+        : '/portal',
+    isStudent: false,
+  })),
+  ...SYNTHETIC_STUDENTS.slice(0, 3).map((s) => ({
+    id: s.id,
+    name: s.fullName,
+    identifier: s.studentCode,
+    role: 'student' as const,
+    roleDisplay: 'Enrolled Student',
+    targetDashboard: '/student/dashboard',
+    isStudent: true,
+  })),
+];
 
 export default function UnifiedLoginPage() {
   const router = useRouter();
   const { refresh } = useProgramUpdates();
 
-  const [activeTab, setActiveTab] = useState<LoginRole>('teacher');
-  const [selectedStaffId, setSelectedStaffId] = useState('t-01');
-  const [selectedStudentId, setSelectedStudentId] = useState(SYNTHETIC_STUDENTS[0]?.id || 's-01');
+  const [selectedAccountId, setSelectedAccountId] = useState(ALL_ACCOUNTS[0].id);
   const [password, setPassword] = useState('demo-password');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Filter staff by category
-  const teachers = SYNTHETIC_USERS.filter((u) => u.role === 'teacher' && u.accountStatus === 'active');
-  const administrators = SYNTHETIC_USERS.filter((u) => u.role === 'admin' || u.role === 'coordinator');
-  const developers = SYNTHETIC_USERS.filter((u) => u.role === 'developer');
+  const selectedAccount =
+    ALL_ACCOUNTS.find((a) => a.id === selectedAccountId) || ALL_ACCOUNTS[0];
 
-  const handleStaffLogin = (actorId: string, destination: string) => {
-    setIsSubmitting(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setErrorMessage(null);
-
-    // Set cookie
-    if (typeof document !== 'undefined') {
-      document.cookie = `lpc_demo_user=${actorId}; path=/; SameSite=Lax`;
-    }
-
-    setTimeout(() => {
-      router.push(destination);
-    }, 300);
-  };
-
-  const handleStudentLogin = async (studentId: string) => {
     setIsSubmitting(true);
-    setErrorMessage(null);
+
     try {
-      const res = await fetch('/api/student/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId }),
-      });
-      if (!res.ok) throw new Error('Student session creation failed.');
-      await refresh();
-      router.push('/student/dashboard');
-    } catch {
-      setErrorMessage('Could not sign in as demo student. Please try again.');
+      if (selectedAccount.isStudent) {
+        // Authenticate student session
+        const res = await fetch('/api/student/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentId: selectedAccount.id }),
+        });
+        if (!res.ok) throw new Error('Student login failed.');
+        await refresh();
+      } else {
+        // Authenticate staff session (Teacher, Coordinator, Admin, Developer)
+        if (typeof document !== 'undefined') {
+          document.cookie = `lpc_demo_user=${selectedAccount.id}; path=/; SameSite=Lax`;
+        }
+      }
+
+      // Automatically route user to their assigned role dashboard
+      setTimeout(() => {
+        router.push(selectedAccount.targetDashboard);
+      }, 400);
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : 'Login failed. Please try again.');
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-10 sm:my-16 px-4">
-      {/* Header */}
-      <div className="text-center space-y-3 mb-8">
+    <div className="max-w-md mx-auto my-12 sm:my-16 px-4">
+      {/* Brand & Title */}
+      <div className="text-center space-y-2 mb-8">
         <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-slate-200 shadow-md mx-auto flex items-center justify-center relative">
           <img
             src="/assets/images/lpc-emblem.png"
-            alt="Language Proficiency Center"
+            alt="LPC Official Emblem"
             className="w-full h-full object-contain"
           />
           <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-lpc-navy-900 border-2 border-white flex items-center justify-center text-lpc-gold-400">
             <Lock className="w-3 h-3" />
           </div>
         </div>
-
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            Institutional Portal Sign In
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Language Proficiency Center (LPC) • Faculty, Student, Admin &amp; Developer Access
-          </p>
-        </div>
-      </div>
-
-      {/* Demo Guidance Callout */}
-      <div className="mb-6 p-4 bg-amber-50/90 border border-amber-200/90 rounded-2xl text-xs text-amber-950 space-y-1 shadow-xs">
-        <div className="flex items-center gap-1.5 font-bold text-amber-900">
-          <Sparkles className="w-4 h-4 text-lpc-gold-600" />
-          <span>Interactive Prototype &amp; Exploration Mode</span>
-        </div>
-        <p className="text-[11px] text-amber-900/90 leading-relaxed">
-          Select any of the 4 roles below to instantly test and explore each persona&apos;s live workstation, attendance workflows, and dashboards.
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+          Sign In to LPC Portal
+        </h1>
+        <p className="text-xs text-slate-500">
+          Sign in with your institutional ID. You will be automatically redirected to your assigned dashboard.
         </p>
       </div>
 
-      {/* Main Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xl overflow-hidden">
-        {/* Role Selection Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-slate-200 bg-slate-50/60 p-1.5 gap-1 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('teacher');
-              setSelectedStaffId(teachers[0]?.id || 't-01');
-            }}
-            className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'teacher'
-                ? 'bg-white text-lpc-navy-950 shadow-sm border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-            }`}
-          >
-            <Users className="w-4 h-4 text-blue-600" />
-            <span>Teachers</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('student');
-            }}
-            className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'student'
-                ? 'bg-white text-lpc-navy-950 shadow-sm border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-            }`}
-          >
-            <GraduationCap className="w-4 h-4 text-emerald-600" />
-            <span>Students</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('admin');
-              setSelectedStaffId(administrators[0]?.id || 'admin-01');
-            }}
-            className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'admin'
-                ? 'bg-white text-lpc-navy-950 shadow-sm border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-            }`}
-          >
-            <Shield className="w-4 h-4 text-purple-600" />
-            <span>Admin</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('developer');
-              setSelectedStaffId(developers[0]?.id || 'dev-01');
-            }}
-            className={`py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'developer'
-                ? 'bg-white text-lpc-navy-950 shadow-sm border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
-            }`}
-          >
-            <Code2 className="w-4 h-4 text-indigo-600" />
-            <span>Developer</span>
-          </button>
+      {/* Main Single Login Card */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-5">
+        {/* Automatic Role Notice */}
+        <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-start gap-2.5 text-xs text-slate-700">
+          <Sparkles className="w-4 h-4 text-lpc-gold-500 shrink-0 mt-0.5" />
+          <div>
+            <strong>Single Sign-On (SSO):</strong> Your role and permissions are bound to your account ID. Logging in automatically opens your respective dashboard.
+          </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="p-6 sm:p-8 space-y-6">
-          {errorMessage && (
-            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700">
-              {errorMessage}
-            </div>
-          )}
+        {errorMessage && (
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-2 text-xs text-rose-700">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
-          {/* 1. TEACHER TAB */}
-          {activeTab === 'teacher' && (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h2 className="text-base font-bold text-slate-900">Faculty &amp; Instructor Login</h2>
-                <p className="text-xs text-slate-500">
-                  Record session attendance, grade speaking evaluations, and manage batch homework.
-                </p>
-              </div>
+        {/* Single Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label
+              htmlFor="login-account"
+              className="block text-xs font-semibold text-slate-700 mb-1"
+            >
+              Account ID / Email
+            </label>
+            <select
+              id="login-account"
+              value={selectedAccountId}
+              onChange={(e) => setSelectedAccountId(e.target.value)}
+              className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-lpc-navy-600 min-h-[44px]"
+            >
+              {ALL_ACCOUNTS.map((acc) => (
+                <option key={acc.id} value={acc.id}>
+                  {acc.name} — {acc.roleDisplay} ({acc.identifier})
+                </option>
+              ))}
+            </select>
+          </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Faculty Profile
-                </label>
-                <select
-                  value={selectedStaffId}
-                  onChange={(e) => setSelectedStaffId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-lpc-navy-600 min-h-[44px]"
-                >
-                  {teachers.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.fullName} — {u.email} ({u.assignedBranchIds.join(', ')})
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <div>
+            <label
+              htmlFor="login-password"
+              className="block text-xs font-semibold text-slate-700 mb-1"
+            >
+              Password (Demo Password)
+            </label>
+            <input
+              id="login-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-lpc-navy-600 min-h-[44px]"
+              required
+            />
+          </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Password (Demo password)
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-lpc-navy-600 min-h-[44px]"
-                />
-              </div>
+          {/* Assigned Destination Preview */}
+          <div className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 flex items-center justify-between">
+            <span>Assigned Role: <strong className="text-slate-800">{selectedAccount.roleDisplay}</strong></span>
+            <span className="font-mono text-slate-400">{selectedAccount.targetDashboard}</span>
+          </div>
 
-              <button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => handleStaffLogin(selectedStaffId, '/portal')}
-                className="w-full py-3 px-4 bg-lpc-navy-900 hover:bg-lpc-navy-950 text-white font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm min-h-[46px]"
-              >
-                <span>Enter Faculty Attendance Portal</span>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3 px-4 bg-lpc-navy-900 hover:bg-lpc-navy-950 text-white font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm min-h-[46px]"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Redirecting to your dashboard...</span>
+              </>
+            ) : (
+              <>
+                <span>Sign In &amp; Enter Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
+              </>
+            )}
+          </button>
+        </form>
 
-          {/* 2. STUDENT TAB */}
-          {activeTab === 'student' && (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h2 className="text-base font-bold text-slate-900">Student Portal Sign In</h2>
-                <p className="text-xs text-slate-500">
-                  Track course attendance records, view class schedules, and review batch notices.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Student Demo Profile
-                </label>
-                <select
-                  value={selectedStudentId}
-                  onChange={(e) => setSelectedStudentId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-emerald-600 min-h-[44px]"
-                >
-                  {SYNTHETIC_STUDENTS.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.fullName} ({s.studentCode})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-xl text-xs text-emerald-900">
-                Student authentication operates with instantaneous session tokens in demo mode. No password entry required.
-              </div>
-
-              <button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => handleStudentLogin(selectedStudentId)}
-                className="w-full py-3 px-4 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm min-h-[46px]"
-              >
-                <span>Enter Student Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
-
-          {/* 3. ADMINISTRATOR & COORDINATOR TAB */}
-          {activeTab === 'admin' && (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h2 className="text-base font-bold text-slate-900">Administrator &amp; Coordinator Portal</h2>
-                <p className="text-xs text-slate-500">
-                  Global cohort batch creation, session scheduling, student enrollment, and branch oversight.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Administrative Persona
-                </label>
-                <select
-                  value={selectedStaffId}
-                  onChange={(e) => setSelectedStaffId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-600 min-h-[44px]"
-                >
-                  {administrators.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.fullName} — {u.role.toUpperCase()} ({u.assignedBranchIds.join(', ')})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-600 min-h-[44px]"
-                />
-              </div>
-
-              <button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => handleStaffLogin(selectedStaffId, '/portal/admin')}
-                className="w-full py-3 px-4 bg-purple-900 hover:bg-purple-950 text-white font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm min-h-[46px]"
-              >
-                <span>Enter Administrator Workstation</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
-
-          {/* 4. WEB DEVELOPER TAB */}
-          {activeTab === 'developer' && (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h2 className="text-base font-bold text-slate-900">Web Developer Console (Superuser)</h2>
-                <p className="text-xs text-slate-500">
-                  Full system diagnostics, live API telemetry, fail-closed security boundary audit, and persona switcher.
-                </p>
-              </div>
-
-              <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-xl space-y-2">
-                <div className="text-xs font-bold text-indigo-950 flex items-center gap-2">
-                  <Code2 className="w-4 h-4 text-indigo-700" />
-                  <span>Lead Developer Persona: Tanvir Ahmad</span>
-                </div>
-                <p className="text-[11px] text-indigo-800">
-                  Instant developer authorization. Bypasses restricted scopes for system verification, schema inspection, and automated test checks.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => handleStaffLogin('dev-01', '/portal/developer')}
-                className="w-full py-3 px-4 bg-indigo-900 hover:bg-indigo-950 text-white font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-sm min-h-[46px]"
-              >
-                <span>Launch Developer Workstation</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
+        <div className="text-center pt-3 border-t border-slate-100">
+          <Link
+            href="/"
+            className="text-xs text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1"
+          >
+            <span>&larr; Return to Homepage</span>
+          </Link>
         </div>
-      </div>
-
-      {/* Return to website */}
-      <div className="text-center mt-6">
-        <Link
-          href="/"
-          className="text-xs text-slate-500 hover:text-slate-800 transition-colors inline-flex items-center gap-1"
-        >
-          <span>&larr; Return to Language Proficiency Center Homepage</span>
-        </Link>
       </div>
     </div>
   );
