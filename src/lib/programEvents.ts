@@ -9,15 +9,15 @@ export type ProgramEvent = ProgramInput & { id: string; ownerId: string; ownerNa
 export class ProgramError extends Error { constructor(message:string, public status=422){super(message);} }
 export function allowedProgramBatches(actor:AuthenticatedActor) {
   const sessions = visibleSessions(actor,SYNTHETIC_CLASS_SESSIONS,SYNTHETIC_BATCHES);
-  return SYNTHETIC_BATCHES.filter(b=>b.status!=='cancelled' && b.status!=='completed' && (actor.role==='admin'||(actor.role==='coordinator'?actor.assignedBranchIds.includes(b.branchId):sessions.some(s=>s.batchId===b.id))));
+  return SYNTHETIC_BATCHES.filter(b=>b.status!=='cancelled' && b.status!=='completed' && (actor.role==='admin'||actor.role==='developer'||(actor.role==='coordinator'?actor.assignedBranchIds.includes(b.branchId):sessions.some(s=>s.batchId===b.id))));
 }
 export function canReadProgram(actor:AuthenticatedActor,event:ProgramEvent) {
   const allowed = allowedProgramBatches(actor).map(b=>b.id);
-  return actor.accountStatus==='active' && (actor.role==='admin'||event.ownerId===actor.id||event.batchIds.some(id=>allowed.includes(id)));
+  return actor.accountStatus==='active' && (actor.role==='admin'||actor.role==='developer'||event.ownerId===actor.id||event.batchIds.some(id=>allowed.includes(id)));
 }
 export function canManageProgram(actor:AuthenticatedActor,event:ProgramEvent) {
   const allowed = allowedProgramBatches(actor).map(b=>b.id);
-  return actor.accountStatus==='active' && (actor.role==='admin'||(event.ownerId===actor.id&&event.batchIds.every(id=>allowed.includes(id)))||(actor.role==='coordinator'&&event.batchIds.every(id=>allowed.includes(id))));
+  return actor.accountStatus==='active' && (actor.role==='admin'||actor.role==='developer'||(event.ownerId===actor.id&&event.batchIds.every(id=>allowed.includes(id)))||(actor.role==='coordinator'&&event.batchIds.every(id=>allowed.includes(id))));
 }
 export function validateProgram(input:unknown,actor:AuthenticatedActor):ProgramInput {
   if (!input || typeof input!=='object') throw new ProgramError('Enter the program details.');

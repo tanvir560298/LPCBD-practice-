@@ -77,6 +77,15 @@ export const SYNTHETIC_USERS: AuthenticatedActor[] = [
     accountStatus: 'active',
     isSyntheticDemo: true,
   },
+  {
+    id: 'dev-01',
+    fullName: 'Tanvir Ahmad',
+    email: 'tanvir.dev@lpcbd.demo',
+    role: 'developer',
+    assignedBranchIds: ['br-dhaka', 'br-chattogram', 'br-rajshahi', 'br-coxsbazar'],
+    accountStatus: 'active',
+    isSyntheticDemo: true,
+  },
 ];
 
 export const SYNTHETIC_TEACHERS: UserProfile[] = [

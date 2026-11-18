@@ -1,6 +1,6 @@
 export type AttendanceStatus = 'unmarked' | 'present' | 'absent' | 'late' | 'excused';
 
-export type UserRole = 'teacher' | 'coordinator' | 'admin';
+export type UserRole = 'teacher' | 'coordinator' | 'admin' | 'developer';
 
 export interface UserProfile {
   id: string;

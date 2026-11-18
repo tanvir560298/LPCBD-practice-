@@ -57,6 +57,8 @@ export default function PortalLoginPage() {
     setTimeout(() => {
       if (selectedUser.role === 'admin') {
         router.push('/portal/admin');
+      } else if (selectedUser.role === 'developer') {
+        router.push('/portal/developer');
       } else {
         router.push('/portal');
       }

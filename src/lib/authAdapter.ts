@@ -122,7 +122,7 @@ export function verifySessionAttendanceAccess(
     };
   }
 
-  if (actor.role === 'admin') {
+  if (actor.role === 'admin' || actor.role === 'developer') {
     return { authorized: true };
   }
 
@@ -172,7 +172,7 @@ export function verifyAdminAccess(actor: AuthenticatedActor): {
   reason?: string;
   statusCode?: number;
 } {
-  if (actor.role === 'admin') {
+  if (actor.role === 'admin' || actor.role === 'developer') {
     return { authorized: true };
   }
 
@@ -190,7 +190,7 @@ export function verifyCoordinatorOrAdminAccess(
   actor: AuthenticatedActor,
   branchId?: string
 ): { authorized: boolean; reason?: string; statusCode?: number } {
-  if (actor.role === 'admin') {
+  if (actor.role === 'admin' || actor.role === 'developer') {
     return { authorized: true };
   }
 
